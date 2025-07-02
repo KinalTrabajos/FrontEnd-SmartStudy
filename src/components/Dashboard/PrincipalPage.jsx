@@ -1,9 +1,20 @@
-
+import React from "react";
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonMenuButton,
+  IonContent
+} from "@ionic/react";
 
 export const PrincipalPage = () => {
-    return(
-        <div>
-            <h1>Hola Mundo</h1>
-        </div>
-    )
-}
+  return (
+    <IonPage id="menu-content"> 
+      <IonContent className="ion-padding">
+        <h1>Bienvenido a la página principal</h1>
+      </IonContent>
+    </IonPage>
+  );
+};

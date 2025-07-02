@@ -1,12 +1,11 @@
-import MenuTabs from "../../components/Tabs/Tabs"
-import Content from "../../components/Dashboard/Content";
-import ToolBar from "../../components/Dashboard/ToolBar";
+import { MenuComponent } from "../../components/Menu/MenuComponent";
+import { PrincipalPage } from "../../components/Dashboard/PrincipalPage";
+import  ToolBar  from "../../components/Dashboard/ToolBar";
 
 export const DashboardPage = () => {
     
     return (
-        <ToolBar/>,
-        <Content/>,
-        <MenuTabs/>
+        <MenuComponent/>,
+        <PrincipalPage/> 
     )
 }
