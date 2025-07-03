@@ -24,6 +24,9 @@ export const TaskPage = () => {
     
     return(
         <>
+        <IonButton>
+          Crear nueva tarea
+        </IonButton>
       <IonList>
         <IonReorderGroup disabled={isDisabled} onIonItemReorder={handleReorder}>
           <IonItem>
@@ -58,3 +61,6 @@ export const TaskPage = () => {
     </>
     )
 }
+
+
+//https://chatgpt.com/share/68661e91-4598-800e-986d-a81e5f7af6db
