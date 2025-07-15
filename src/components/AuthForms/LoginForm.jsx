@@ -24,7 +24,7 @@ export const LoginForm = () => {
             <IonContent className="ion-padding">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <IonItem>
-                        <IonLabel position="floating" >Correo</IonLabel>
+                        <IonLabel position="floating" className="block text-sm/6 font-semibold text-gray-900" >Correo</IonLabel>
                         <Controller
                             name="email"
                             control={control}
