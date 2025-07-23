@@ -7,6 +7,7 @@ import { PrincipalPage } from './components/Dashboard/PrincipalPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { TaskPage } from './pages/tasks/TaskPage';
+import { TaskForm } from './components/Tasks/TaskForm';
 
 setupIonicReact();
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dashboard" element={<MenuComponent />}>
           <Route index element={<PrincipalPage />} />
           <Route path='tasks' element={<TaskPage />} />
+          <Route path='tasks/create' element={<TaskForm mode='create'/>}/>
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

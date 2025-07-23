@@ -7,9 +7,11 @@ import {
   IonReorder,
   IonReorderGroup,
 } from '@ionic/react';
+import { useNavigate } from 'react-router-dom';
 
 export const TaskPage = () => {
     const [isDisabled, setIsDisabled] = useState(true);
+    const navigate = useNavigate();
 
   function handleReorder(event) {
 
@@ -24,7 +26,7 @@ export const TaskPage = () => {
     
     return(
         <>
-        <IonButton>
+        <IonButton onClick={() => navigate('/tasks/create')}>
           Crear nueva tarea
         </IonButton>
       <IonList>

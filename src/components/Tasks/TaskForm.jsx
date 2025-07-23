@@ -8,7 +8,7 @@ import { IonAlert, IonToast } from "@ionic/react";
 import 'react-datepicker/dist/react-datepicker.css';
 import { globe } from "ionicons/icons";
 
-export const TaskForm = ({ mode: 'create'}) => {
+export const TaskForm = ({ mode = 'create'}) => {
     const navigate = useNavigate();
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm();
     const [taskData, setTaskData] = useState(null);
