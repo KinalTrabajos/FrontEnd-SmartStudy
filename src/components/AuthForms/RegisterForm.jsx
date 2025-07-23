@@ -19,15 +19,20 @@ import {
 } from "@ionic/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
 import { mail, lockClosed, eye, eyeOff, person, personAdd } from "ionicons/icons";
 import { useState } from "react";
+import { useRegister } from "../../shared/hooks/auth/useRegister";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
     name: yup
         .string()
         .min(2, "El nombre debe tener al menos 2 caracteres")
         .required("El nombre es requerido"),
+    username: yup
+        .string()
+        .min(2, "El username debe tener al menos 2 caracteres")
+        .required("El username es requerido"),
     email: yup
         .string()
         .email("Ingresa un correo válido")
@@ -46,15 +51,15 @@ export const RegisterForm = () => {
     const { handleSubmit, control, formState: { errors, isSubmitting } } = useForm({
         resolver: yupResolver(schema)
     });
-    const navigate = useNavigate();
+
+    const  navigate = useNavigate();
+    const { register, isLoading} = useRegister();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log(data);
-        // Simular delay de registro
+        register(data)
         await new Promise(resolve => setTimeout(resolve, 1500));
-        navigate("/dashboard");
     };
 
     return (
@@ -123,6 +128,48 @@ export const RegisterForm = () => {
                                                 <p className="text-sm flex items-center ml-2">
                                                     <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                                                     {errors.name.message}
+                                                </p>
+                                            </IonText>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <IonItem 
+                                            className={`rounded-xl border-2 transition-all duration-300 hover:shadow-md ${
+                                                errors.username 
+                                                    ? 'border-red-300 bg-red-50' 
+                                                    : 'border-gray-200 hover:border-green-300'
+                                            }`}
+                                            lines="none"
+                                        >
+                                            <IonIcon 
+                                                icon={person} 
+                                                slot="start" 
+                                                className="text-gray-400 mr-2" 
+                                            />
+                                            <IonLabel position="floating" className="font-semibold text-gray-700">
+                                                Nombre de Usuario
+                                            </IonLabel>
+                                            <Controller
+                                                name="username"
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <IonInput
+                                                        {...field}
+                                                        type="text"
+                                                        placeholder="Tu nombre completo"
+                                                        className="transition-all duration-200"
+                                                        onIonInput={(e) => field.onChange(e.detail.value)}
+                                                        onIonBlur={field.onBlur}
+                                                    />
+                                                )}
+                                            />
+                                        </IonItem>
+                                        {errors.username && (
+                                            <IonText color="danger" className="animate-shake">
+                                                <p className="text-sm flex items-center ml-2">
+                                                    <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                                                    {errors.username.message}
                                                 </p>
                                             </IonText>
                                         )}

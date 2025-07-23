@@ -1,11 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
-import { 
-    IonInput, 
-    IonText, 
-    IonItem, 
-    IonLabel, 
-    IonButton, 
-    IonPage, 
+import {
+    IonInput,
+    IonText,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonPage,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -15,13 +15,15 @@ import {
     IonCardContent,
     IonCardHeader,
     IonCardTitle,
-    IonSpinner
+    IonSpinner,
+    IonToast
 } from "@ionic/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { mail, lockClosed, eye, eyeOff, logIn, person } from "ionicons/icons";
 import { useState } from "react";
+import { useLogin } from "../../shared/hooks/auth/useLogin";
 
 const schema = yup.object().shape({
     email: yup
@@ -38,14 +40,21 @@ export const LoginForm = () => {
     const { handleSubmit, control, formState: { errors, isSubmitting } } = useForm({
         resolver: yupResolver(schema)
     });
-    const navigate = useNavigate();
+    const  navigate = useNavigate();
+    const { login, isLoading } = useLogin();
     const [showPassword, setShowPassword] = useState(false);
+    const [showtToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
 
     const onSubmit = async (data) => {
-        console.log(data);
-        // Simular delay de autenticación
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        navigate("/dashboard");
+        try {
+            login(data.email, data.password)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+        } catch (err) {
+            setToastMessage(err.message);
+            setShowToast(true)
+        }
     };
 
     return (
@@ -55,7 +64,7 @@ export const LoginForm = () => {
                     <IonTitle className="text-white font-bold">Smart Study</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            
+
             <IonContent className="ion-padding bg-gradient-to-br from-blue-50 to-indigo-100">
                 <div className="flex items-center justify-center min-h-full py-8">
                     <div className="w-full max-w-md">
@@ -73,23 +82,22 @@ export const LoginForm = () => {
                                     Inicia sesión en tu cuenta
                                 </p>
                             </IonCardHeader>
-                            
+
                             <IonCardContent className="p-6">
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                     {/* Email Field */}
                                     <div className="space-y-2">
-                                        <IonItem 
-                                            className={`rounded-xl border-2 transition-all duration-300 hover:shadow-md ${
-                                                errors.email 
-                                                    ? 'border-red-300 bg-red-50' 
+                                        <IonItem
+                                            className={`rounded-xl border-2 transition-all duration-300 hover:shadow-md ${errors.email
+                                                    ? 'border-red-300 bg-red-50'
                                                     : 'border-gray-200 hover:border-blue-300'
-                                            }`}
+                                                }`}
                                             lines="none"
                                         >
-                                            <IonIcon 
-                                                icon={mail} 
-                                                slot="start" 
-                                                className="text-gray-400 mr-2" 
+                                            <IonIcon
+                                                icon={mail}
+                                                slot="start"
+                                                className="text-gray-400 mr-2"
                                             />
                                             <IonLabel position="floating" className="font-semibold text-gray-700">
                                                 Correo Electrónico
@@ -121,18 +129,17 @@ export const LoginForm = () => {
 
                                     {/* Password Field */}
                                     <div className="space-y-2">
-                                        <IonItem 
-                                            className={`rounded-xl border-2 transition-all duration-300 hover:shadow-md ${
-                                                errors.password 
-                                                    ? 'border-red-300 bg-red-50' 
+                                        <IonItem
+                                            className={`rounded-xl border-2 transition-all duration-300 hover:shadow-md ${errors.password
+                                                    ? 'border-red-300 bg-red-50'
                                                     : 'border-gray-200 hover:border-blue-300'
-                                            }`}
+                                                }`}
                                             lines="none"
                                         >
-                                            <IonIcon 
-                                                icon={lockClosed} 
-                                                slot="start" 
-                                                className="text-gray-400 mr-2" 
+                                            <IonIcon
+                                                icon={lockClosed}
+                                                slot="start"
+                                                className="text-gray-400 mr-2"
                                             />
                                             <IonLabel position="floating" className="font-semibold text-gray-700">
                                                 Contraseña
@@ -157,8 +164,8 @@ export const LoginForm = () => {
                                                 onClick={() => setShowPassword(!showPassword)}
                                                 className="text-gray-400 hover:text-gray-600 transition-colors"
                                             >
-                                                <IonIcon 
-                                                    icon={showPassword ? eyeOff : eye} 
+                                                <IonIcon
+                                                    icon={showPassword ? eyeOff : eye}
                                                     className="text-lg"
                                                 />
                                             </IonButton>
@@ -175,8 +182,8 @@ export const LoginForm = () => {
 
                                     {/* Forgot Password */}
                                     <div className="text-right">
-                                        <IonButton 
-                                            fill="clear" 
+                                        <IonButton
+                                            fill="clear"
                                             size="small"
                                             className="text-blue-600 hover:text-blue-800 transition-colors"
                                         >
@@ -189,11 +196,10 @@ export const LoginForm = () => {
                                         type="submit"
                                         expand="block"
                                         disabled={isSubmitting}
-                                        className={`rounded-xl font-semibold transition-all duration-300 transform ${
-                                            isSubmitting 
-                                                ? 'opacity-70' 
+                                        className={`rounded-xl font-semibold transition-all duration-300 transform ${isSubmitting
+                                                ? 'opacity-70'
                                                 : 'hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl'
-                                        }`}
+                                            }`}
                                         style={{
                                             '--background': 'linear-gradient(135deg, #3b82f6, #6366f1)',
                                             '--background-hover': 'linear-gradient(135deg, #2563eb, #4f46e5)',
