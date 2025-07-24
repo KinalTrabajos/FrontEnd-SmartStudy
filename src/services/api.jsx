@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiStudy = axios.create({
-    baseURL: 'http://localhost:8001/TDAHSystem/v1',
+    baseURL: 'http://localhost:8080/TDAHSystem/v1',
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
