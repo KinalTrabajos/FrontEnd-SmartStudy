@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonButton,
   IonItem,
@@ -7,44 +7,29 @@ import {
   IonReorder,
   IonReorderGroup,
   IonIcon,
-  IonButtons
+  IonButtons,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+
 } from '@ionic/react';
-import { useNavigate } from 'react-router-dom';
 import { create, trash, reorderFourOutline } from 'ionicons/icons';
+import {  FormTaskModal } from './FormModalTask';
+import { useGetTask } from '../../shared/hooks/tasks/useGetTask';
 
 export const TaskPage = () => {
-  const [tasks, setTasks] = useState([
-    { id: '1', text: 'Comprar víveres', completed: false },
-    { id: '2', text: 'Terminar informe mensual', completed: false },
-    { id: '3', text: 'Llamar a Juan', completed: true },
-    { id: '4', text: 'Hacer ejercicio', completed: false },
-  ]);
+  const { getTasks, tasks} = useGetTask();
   const [isDisabled, setIsDisabled] = useState(true);
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleReorder = (event) => {
-    const from = event.detail.from;
-    const to = event.detail.to;
-    const movedItem = tasks[from];
-    const newTasks = [...tasks];
-    newTasks.splice(from, 1);
-    newTasks.splice(to, 0, movedItem);
-    setTasks(newTasks);
-    event.detail.complete();
-  };
+  useEffect(() => {
+    getTasks()
+  },[])
 
   const toggleReorder = () => {
     setIsDisabled(!isDisabled);
-  };
-
-  const toggleTaskCompletion = (id) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
   };
 
   return (
@@ -52,7 +37,7 @@ export const TaskPage = () => {
       <h1 className="text-4xl font-bold text-center mb-6 text-blue-800">Mis Tareas</h1>
 
       <IonButton
-        onClick={() => navigate('/tasks/create')}
+        onClick={() => setIsOpen(true)}
         expand="block"
         className="mb-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl shadow-xl transition-transform transform hover:scale-105"
       >
@@ -67,7 +52,7 @@ export const TaskPage = () => {
           </div>
         )}
 
-        <IonReorderGroup disabled={isDisabled} onIonItemReorder={handleReorder}>
+        <IonReorderGroup disabled={isDisabled} >
           {tasks.length === 0 ? (
             <IonItem className="py-4 text-center text-gray-500">
               <IonLabel>No hay tareas. ¡Crea una!</IonLabel>
@@ -75,20 +60,28 @@ export const TaskPage = () => {
           ) : (
             tasks.map(task => (
               <IonItem
-                key={task.id}
-                className={`px-4 py-3 flex items-center justify-between transition-transform transform hover:scale-105 ${
-                  task.completed ? 'opacity-50' : ''
-                }`}
+                key={task._id}
+                className={`px-4 py-3 flex items-center justify-between transition-transform transform hover:scale-105 ${task.completed ? 'opacity-50' : ''
+                  }`}
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <input
                     type="checkbox"
-                    checked={task.completed}
+                    checked={task.taskStatus}
                     onChange={() => toggleTaskCompletion(task.id)}
                     className="h-5 w-5 text-blue-600"
                   />
                   <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
-                    {task.text}
+                    {task.taskName}
+                  </IonLabel>
+                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                    {task.taskDescription}
+                  </IonLabel>
+                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                    {task.dueDate}
+                  </IonLabel>
+                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                    {task.priority}
                   </IonLabel>
                 </div>
 
@@ -125,6 +118,8 @@ export const TaskPage = () => {
         <IonIcon slot="start" icon={reorderFourOutline} />
         {isDisabled ? 'Habilitar Reordenar' : 'Deshabilitar Reordenar'}
       </IonButton>
+
+      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
     </div>
   );
 };

@@ -44,3 +44,25 @@ export const register = async(data) => {
     }
 }
 
+export const createTask = async(data) => {
+    try {
+        return await apiStudy.post('/toDoList/create-ToDoList',data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getTask = async() => {
+    try {
+        return await apiStudy.get('/toDoList/get-ToDosList')
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}
+
