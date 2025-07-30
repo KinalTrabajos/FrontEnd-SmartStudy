@@ -18,6 +18,7 @@ import {
 } from '@ionic/react';
 import { create, trash, reorderFourOutline } from 'ionicons/icons';
 import { FormTaskModal } from '../../components/Tasks/FormModalTask';
+import { CameraModal } from '../../components/Tasks/TakePhotoTask';
 import { useGetTask } from '../../shared/hooks/tasks/useGetTask';
 import { useDeleteTask } from '../../shared/hooks/tasks/useDeleteTask';
 
@@ -26,6 +27,7 @@ export const TaskPage = () => {
   const { deleteTask } = useDeleteTask();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
@@ -41,6 +43,12 @@ export const TaskPage = () => {
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     await getTasks();
+  }
+
+  const toggleTaskCompletion = (taskId) => {
+    setSelectedTaskId(taskId);
+    console.log(taskId);
+    setIsCameraOpen(true)
   }
 
   return (
@@ -78,8 +86,8 @@ export const TaskPage = () => {
                 <div className="flex items-center gap-3 flex-grow">
                   <input
                     type="checkbox"
-                    checked={task.taskStatus}
-                    onChange={() => toggleTaskCompletion(task.id)}
+                    checked={task.taskStatus === 'Completed'}
+                    onChange={() => toggleTaskCompletion(task._id)}
                     className="h-5 w-5 text-blue-600"
                   />
                   <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
@@ -135,7 +143,7 @@ export const TaskPage = () => {
       <IonAlert
         isOpen={showAlert}
         header="¿Desea eliminar esta tarea?"
-        onDidDismiss={() => setShowAlert(false)} 
+        onDidDismiss={() => setShowAlert(false)}
         buttons={[
           {
             text: 'Cancelar',
@@ -148,12 +156,13 @@ export const TaskPage = () => {
             text: 'Confirmar',
             role: 'confirm',
             handler: () => {
-              handleDeleteTask(selectedTaskId); 
+              handleDeleteTask(selectedTaskId);
             },
           },
         ]}
       />
-      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)} onTaskCreated={handleTaskCreate} taskToEdit={taskToEdit}/>
+      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)} onTaskCreated={handleTaskCreate} taskToEdit={taskToEdit} />
+      <CameraModal isOpen={isCameraOpen} onClose={() => setIsCameraOpen(false)} taskId={selectedTaskId} onTaskCreated={handleTaskCreate}/>
     </div>
   );
 };

@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/camera": "^7.0.1",
     "@hookform/resolvers": "^5.1.1",
+    "@ionic/pwa-elements": "^3.3.0",
     "@ionic/react": "^8.6.2",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.11.0",
