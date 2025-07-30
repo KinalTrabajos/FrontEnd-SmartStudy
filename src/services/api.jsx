@@ -66,3 +66,25 @@ export const getTask = async() => {
     }
 }
 
+export const deleteTask = async(id) => {
+    try {
+        return await apiStudy.delete(`/toDoList/delete-ToDoList/${id}`)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const updateTask = async (id ,data) => {
+    try {
+        return await apiStudy.put(`/toDoList/update-ToDoList/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+

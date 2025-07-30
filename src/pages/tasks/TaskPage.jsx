@@ -13,24 +13,35 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonAlert
 
 } from '@ionic/react';
 import { create, trash, reorderFourOutline } from 'ionicons/icons';
-import {  FormTaskModal } from './FormModalTask';
+import { FormTaskModal } from '../../components/Tasks/FormModalTask';
 import { useGetTask } from '../../shared/hooks/tasks/useGetTask';
+import { useDeleteTask } from '../../shared/hooks/tasks/useDeleteTask';
 
 export const TaskPage = () => {
-  const { getTasks, tasks} = useGetTask();
+  const { getTasks, tasks } = useGetTask();
+  const { deleteTask } = useDeleteTask();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState(null);
 
   useEffect(() => {
     getTasks()
-  },[])
+  }, [])
 
-  const toggleReorder = () => {
-    setIsDisabled(!isDisabled);
-  };
+  const handleTaskCreate = async () => {
+    await getTasks()
+  }
+
+  const handleDeleteTask = async (taskId) => {
+    await deleteTask(taskId);
+    await getTasks();
+  }
 
   return (
     <div className="p-6 animate-fade-in">
@@ -87,14 +98,25 @@ export const TaskPage = () => {
 
                 <IonButtons slot="end" className="flex items-center gap-2">
                   <IonButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteTask(task.id);
-                    }}
+                    id='delete-alert'
                     fill="clear"
                     className="text-red-500 hover:text-red-700"
+                    onClick={() => {
+                      setSelectedTaskId(task._id)
+                      setShowAlert(true)
+                    }}
                   >
                     <IonIcon icon={trash} slot="icon-only" />
+                  </IonButton>
+
+                  <IonButton
+                    fill='clear'
+                    onClick={() => {
+                      setTaskToEdit(task);
+                      setIsOpen(true)
+                    }}
+                  >
+                    Editar
                   </IonButton>
 
                   {!isDisabled && (
@@ -109,17 +131,29 @@ export const TaskPage = () => {
         </IonReorderGroup>
       </IonList>
 
-      <IonButton
-        onClick={toggleReorder}
-        expand="block"
-        fill="outline"
-        className="mt-6 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-xl transition-transform hover:scale-105"
-      >
-        <IonIcon slot="start" icon={reorderFourOutline} />
-        {isDisabled ? 'Habilitar Reordenar' : 'Deshabilitar Reordenar'}
-      </IonButton>
 
-      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+      <IonAlert
+        isOpen={showAlert}
+        header="¿Desea eliminar esta tarea?"
+        onDidDismiss={() => setShowAlert(false)} 
+        buttons={[
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancelado');
+            },
+          },
+          {
+            text: 'Confirmar',
+            role: 'confirm',
+            handler: () => {
+              handleDeleteTask(selectedTaskId); 
+            },
+          },
+        ]}
+      />
+      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)} onTaskCreated={handleTaskCreate} taskToEdit={taskToEdit}/>
     </div>
   );
 };
