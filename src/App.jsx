@@ -11,6 +11,8 @@ import { TaskForm } from './components/Tasks/TaskForm';
 import { PublicationPage } from './pages/Publicationes/PublicationPage';
 import { ComentsPage } from './pages/Coment/ComentsPage';
 
+
+
 setupIonicReact();
 
 function App() {
