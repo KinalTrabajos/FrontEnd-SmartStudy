@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css'
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton } from "@ionic/react";
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonIcon } from "@ionic/react";
+import { useGetEvents } from "../../shared/hooks/event/useGetEvents";
+import { create, trash, reorderFourOutline } from 'ionicons/icons';
+import { FormCreateEvent } from "../../components/Calendar/FormCreateEvent";
 
 export const CalendarPage = () => {
     const [date, setDate] = useState(new Date());
-    const [events, setEvents] = useState(
-        [
-            { "id": 1, "titulo": "Reunión", "fecha": "2025-07-30" },
-            { "id": 2, "titulo": "Entrega Proyecto", "fecha": "2025-08-02" }
-        ]
-    );
+    const { getEvents, events } = useGetEvents();
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        getEvents()
+    },[])
+
+    const handleEventCreate = async() => {
+        await getEvents()
+    }
 
     const tileContent = ({ date }) => {
         const dayEvents = events.filter(
-            (event) => new Date(event.fechaInicio).toDateString() === date.toDateString()
+            (event) => new Date(event.dateStart).toDateString() === date.toDateString()
         );
 
         return dayEvents.length > 0 ? (
@@ -27,7 +34,7 @@ export const CalendarPage = () => {
     const handleDateClick = (selectedDate) => {
         setDate(selectedDate);
         const dayEvents = events.filter(
-            (event) => new Date(event.fechaInicio).toDateString() === selectedDate.toDateString()
+            (event) => new Date(event.dateStart).toDateString() === selectedDate.toDateString()
         );
         setSelectedEvents(dayEvents);
         setShowModal(true)
@@ -35,12 +42,17 @@ export const CalendarPage = () => {
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Calendario de Eventos</IonTitle>
-                </IonToolbar>
-            </IonHeader>
 
+            <h1 className="text-4xl font-bold text-center mb-6 text-blue-800">Mi Calendario</h1>
+
+            <IonButton
+                onClick={() => setIsOpen(true)}
+                expand="block"
+                className="mb-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl shadow-xl transition-transform transform hover:scale-105"
+            >
+                <IonIcon slot="start" icon={create} />
+                Crear nueva tarea
+            </IonButton>
             <IonContent className="ion-padding">
                 <Calendar
                     onChange={handleDateClick}
@@ -59,7 +71,9 @@ export const CalendarPage = () => {
                         {selectedEvents.length > 0 ? (
                             selectedEvents.map((ev) => (
                                 <div key={ev.id}>
-                                    <h3>{ev.titulo}</h3>
+                                    <h3>{ev.title}</h3>
+                                    <h4>{ev.description}</h4>
+                                    <h4>{ev.dateStart}</h4>
                                 </div>
                             ))
                         ) : (
@@ -70,6 +84,7 @@ export const CalendarPage = () => {
                         </IonButton>
                     </IonContent>
                 </IonModal>
+                <FormCreateEvent isOpen={isOpen} onClose={() => setIsOpen(false)} onEventCreated={handleEventCreate}/>
             </IonContent>
         </IonPage>
     )

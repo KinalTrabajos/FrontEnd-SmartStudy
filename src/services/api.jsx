@@ -88,3 +88,35 @@ export const updateTask = async (id ,data) => {
     }
 }
 
+export const getCategory = async() => {
+    try {
+        return await apiStudy.get('/categorySubject/viewSubject')
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getEvents = async() => {
+    try {
+        return await apiStudy.get('/event/')
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const createEvent = async(data) => {
+    try {
+        return await apiStudy.post('/event/',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+} 
