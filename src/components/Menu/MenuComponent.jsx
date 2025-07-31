@@ -35,8 +35,13 @@ export const MenuComponent = () => {
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle autoHide={false}>
-              <IonItem routerLink="/dashboard/configuracion" routerDirection="none">
-                <IonLabel>Configuración</IonLabel>
+              <IonItem routerLink="/dashboard/publication" routerDirection="none">
+                <IonLabel>Publicaciones</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle autoHide={false}>
+              <IonItem routerLink="/dashboard/comentario" routerDirection="none">
+                <IonLabel>Comentarios</IonLabel>
               </IonItem>
             </IonMenuToggle>
           </IonList>
