@@ -1,0 +1,109 @@
+import { useViewComentId } from "../../shared/hooks/coments/useViewComentId";
+import { useDeleteComment } from "../../shared/hooks/coments/useDeleteComment";
+import { usePutComent } from "../../shared/hooks/coments/usePutComent";
+import { useEffect, useState } from "react";
+import { IonList, IonItem, IonLabel, IonButton, IonInput } from "@ionic/react";
+import { createOutline, trashOutline, saveOutline } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
+
+export const CommentList = ({ publicationId }) => {
+  const { comments, loadingComments } = useViewComentId(publicationId);
+  const { deleteComment } = useDeleteComment();
+  const { putComment } = usePutComent();
+
+  const [localComments, setLocalComments] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
+
+  useEffect(() => {
+    setLocalComments(comments);
+  }, [comments]);
+
+  const handleDelete = async (id) => {
+    await deleteComment(id);
+    setLocalComments(localComments.filter((c) => c._id !== id));
+  };
+
+  const handleEdit = (comment) => {
+    setEditingId(comment._id);
+    setEditedContent(comment.content);
+  };
+
+  const handleSave = async (id) => {
+    const { error } = await putComment(id, { content: editedContent });
+    if (!error) {
+      setLocalComments(
+        localComments.map((c) =>
+          c._id === id ? { ...c, content: editedContent } : c
+        )
+      );
+      setEditingId(null);
+    }
+  };
+
+  if (loadingComments) {
+    return (
+      <p className="p-4 text-gray-500 text-center">Cargando comentarios...</p>
+    );
+  }
+
+  if (localComments.length === 0) {
+    return (
+      <p className="p-4 text-gray-400 italic text-center">
+        No hay comentarios aún.
+      </p>
+    );
+  }
+
+  return (
+    <IonList className="bg-transparent p-4">
+      {localComments.map((comment) => (
+        <IonItem
+          key={comment._id}
+          className="ion-no-padding rounded-lg mb-2 shadow-sm"
+        >
+          {editingId === comment._id ? (
+            <div className="flex items-center w-full p-2 bg-white rounded-lg">
+              <IonInput
+                value={editedContent}
+                onIonChange={(e) => setEditedContent(e.detail.value)}
+                className="flex-grow mr-2 border-none"
+              />
+              <IonButton
+                onClick={() => handleSave(comment._id)}
+                color="success"
+                fill="clear"
+              >
+                <IonIcon icon={saveOutline} />
+              </IonButton>
+            </div>
+          ) : (
+            <div className="flex items-center w-full p-2 bg-white rounded-lg">
+              <IonLabel className="ion-text-wrap text-black flex-grow">
+                {comment.content}
+              </IonLabel>
+              <div className="flex items-center space-x-2 ml-4">
+                <IonButton
+                  onClick={() => handleEdit(comment)}
+                  color="warning"
+                  fill="clear"
+                  size="small"
+                >
+                  <IonIcon icon={createOutline} />
+                </IonButton>
+                <IonButton
+                  onClick={() => handleDelete(comment._id)}
+                  color="danger"
+                  fill="clear"
+                  size="small"
+                >
+                  <IonIcon icon={trashOutline} />
+                </IonButton>
+              </div>
+            </div>
+          )}
+        </IonItem>
+      ))}
+    </IonList>
+  );
+};

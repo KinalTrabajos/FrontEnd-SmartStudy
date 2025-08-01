@@ -7,7 +7,7 @@ import {
 
 import {
   search, personCircle, chevronUpCircle,
-  colorPalette, document, globe, home, list, settings, calendar, folder
+  colorPalette, document, globe, home, list, settings, calendar, folder, chatbubble, newspaper
 } from 'ionicons/icons';
 
 import { Outlet } from 'react-router-dom';
@@ -31,21 +31,17 @@ export const MenuComponent = () => {
               { link: "/dashboard/setting", icon: settings, label: "Ajuestes" },
               { link: "/dashboard/calendar", icon: calendar, label: "Calendario" },
               { link: "/dashboard/category", icon: folder, label: "Categorías" },
+              { link: "/dashboard/publication", icon: newspaper, label: "Publicaciones" },
+              { link: "/dashboard/comentario", icon: chatbubble, label: "Comentarios" },
             ].map((item, idx) => (
               <IonMenuToggle key={idx} autoHide={false}>
                 <IonItem
                   routerLink={item.link}
                   routerDirection="none"
                   className="transition duration-300 rounded-lg mb-2"
-                  style={{
-                    "--background": "transparent",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--color-accent)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "transparent")
-                  }
+                  style={{ "--background": "transparent" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 >
                   <IonIcon slot="start" icon={item.icon} style={{ color: "var(--color-primary)", marginRight: "1rem" }} />
                   <IonLabel style={{ color: "var(--color-secondary)" }}>{item.label}</IonLabel>
