@@ -120,3 +120,25 @@ export const createEvent = async(data) => {
         }
     }
 } 
+
+export const updateEvent = async(id, data) => {
+    try {
+        return await apiStudy.put(`/event/${id}`,data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const getInformationUser = async() => {
+    try {
+        return await apiStudy.get(`/users/viewUserbyId`)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}

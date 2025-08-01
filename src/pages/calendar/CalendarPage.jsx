@@ -1,49 +1,60 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css'
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonButton, IonIcon, IonItem, IonLabel, IonInput, IonTextarea, IonDatetime, IonButtons } from "@ionic/react";
+import {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonModal,
+    IonButton,
+    IonIcon,
+    IonButtons,
+} from "@ionic/react";
 import { useGetEvents } from "../../shared/hooks/event/useGetEvents";
-import { create, trash, reorderFourOutline } from 'ionicons/icons';
+import { create, pencil, closeCircleOutline } from "ionicons/icons";
 import { FormCreateEvent } from "../../components/Calendar/FormCreateEvent";
-import { useForm, Controller } from 'react-hook-form';
-import { useCreateEvent } from "../../shared/hooks/event/useCreateEvent";
+import 'react-calendar/dist/Calendar.css';
 
 export const CalendarPage = () => {
     const [date, setDate] = useState(new Date());
     const { getEvents, events } = useGetEvents();
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [isOpen, setIsOpen] = useState(false)
-    const { createEvent } = useCreateEvent();
-    const [userLogged] = useState(() => JSON.parse(localStorage.getItem('user')))
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
-
-    const { register, handleSubmit, reset, control } = useForm({
-        defaultValues: {
-            title: '',
-            description: '',
-            dateStart: new Date().toISOString(),
-            user: userLogged.id
-        },
-    });
+    const [isOpenCreate, setIsOpenCreate] = useState(false);
+    const [isOpenEdit, setIsOpenEdit] = useState(false);
+    const [eventToEdit, setEventToEdit] = useState(null);
 
     useEffect(() => {
-        getEvents()
-    }, [])
+        getEvents();
+    }, []);
 
     const handleEventCreate = async () => {
-        await getEvents()
-    }
+        await getEvents();
+        // Vuelve a establecer la fecha actual para que el modal se actualice
+        // con los eventos de hoy después de crear uno
+        handleDateClick(new Date());
+    };
 
-    const tileContent = ({ date }) => {
-        const dayEvents = events.filter(
-            (event) => new Date(event.dateStart).toDateString() === date.toDateString()
-        );
+    const openModalEdit = (event) => {
+        setShowModal(false);
+        setEventToEdit(event);
+        setIsOpenEdit(true);
+    };
 
-        return dayEvents.length > 0 ? (
-            <span style={{ color: "red", fontSize: "1.2em" }} >*</span>
-        ) : null
-    }
+    const tileContent = ({ date, view }) => {
+        if (view === "month") {
+            const dayEvents = events.filter(
+                (event) => new Date(event.dateStart).toDateString() === date.toDateString()
+            );
+            return dayEvents.length > 0 ? (
+                <span
+                    className="block w-2 h-2 mx-auto mt-1 rounded-full"
+                    style={{ backgroundColor: "var(--ion-color-tertiary)" }}
+                ></span>
+            ) : null;
+        }
+    };
 
     const handleDateClick = (selectedDate) => {
         setDate(selectedDate);
@@ -51,115 +62,105 @@ export const CalendarPage = () => {
             (event) => new Date(event.dateStart).toDateString() === selectedDate.toDateString()
         );
         setSelectedEvents(dayEvents);
-        setShowModal(true)
-    }
-
-    const onSubmit = async (data) => {
-        try {
-            await createEvent(data);
-            reset();
-            setSelectedDate('');
-        } catch (error) {
-            console.error("Error creando evento:", error);
-        }
-    }
-
-    const handleDismiss = () => {
-        reset();
-        setSelectedDate('');
-    }
+        setShowModal(true);
+    };
 
     return (
         <IonPage>
+            <IonContent fullscreen className="ion-padding" style={{ "--background": "var(--ion-color-white)" }}>
+                <div className="min-h-full px-4 py-6">
+                    <h1 className="text-3xl font-bold text-center mb-6" style={{ color: "var(--ion-color-dark)" }}>
+                        Calendario de Eventos
+                    </h1>
 
-            <h1 className="text-4xl font-bold text-center mb-6 text-blue-800">Mi Calendario</h1>
-            <IonContent className="ion-padding">
-                <Calendar
-                    onChange={handleDateClick}
-                    value={date}
-                    tileContent={tileContent}
-                />
-
-
-                <IonContent className="ion-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">Titulo del evento</IonLabel>
-                        <IonInput placeholder="Ej: Examen de Matematicas" {...register('title', { required: true })} />
-                    </IonItem>
-
-                    <IonItem>
-                        <IonLabel position="stacked">Descripción</IonLabel>
-                        <IonTextarea placeholder="Detalles del evento" {...register('description')} />
-                    </IonItem>
-
-                    <IonItem>
-                        <IonLabel position="stacked">Fecha del Evento</IonLabel>
-                        <Controller
-                            name="dateStart"
-                            control={control}
-                            render={({ field }) => (
-                                <>
-                                    <IonDatetime
-                                        presentation="date"
-                                        value={field.value}
-                                        min={new Date().toISOString().split('T')[0]}
-                                        onIonChange={(e) => {
-                                            field.onChange(e.detail.value);
-                                            setSelectedDate(e.detail.value);
-                                        }}
-                                        style={{ width: '100%' }}
-                                    />
-                                    {selectedDate && (
-                                        <p className="text-sm mt-2">
-                                            Fecha seleccionada:{" "}
-                                            <strong>
-                                                {new Date(selectedDate).toLocaleDateString('es-ES', {
-                                                    day: '2-digit',
-                                                    month: 'long',
-                                                    year: 'numeric',
-                                                })}
-                                            </strong>
-                                        </p>
-                                    )}
-                                </>
-                            )}
-                        />
-                    </IonItem>
-                    <IonButton
-                        onClick={handleSubmit(onSubmit)}
-                        expand="block"
-                        className="mb-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl shadow-xl transition-transform transform hover:scale-105"
-                    >
-                        <IonIcon slot="start" icon={create} />
-                        Crear nueva tarea
-                    </IonButton>
-                </IonContent>
-
-                {/* Modal para mostrar eventos */}
-                <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-                    <IonHeader>
-                        <IonToolbar>
-                            <IonTitle>Eventos del {date.toDateString()}</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
-                    <IonContent className="ion-padding">
-                        {selectedEvents.length > 0 ? (
-                            selectedEvents.map((ev) => (
-                                <div key={ev.id}>
-                                    <h3>{ev.title}</h3>
-                                    <h4>{ev.description}</h4>
-                                    <h4>{ev.dateStart}</h4>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No hay eventos para este día.</p>
-                        )}
-                        <IonButton expand="block" onClick={() => setShowModal(false)}>
-                            Cerrar
+                    <div className="flex justify-center mb-6">
+                        <IonButton
+                            onClick={() => setIsOpenCreate(true)}
+                            className="w-full max-w-sm shadow-lg hover:scale-105 transition-transform"
+                            style={{
+                                "--background": "var(--ion-color-tertiary)",
+                                "--border-radius": "12px",
+                                "--box-shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                            }}
+                        >
+                            <IonIcon slot="start" icon={create} />
+                            Crear nueva tarea
                         </IonButton>
-                    </IonContent>
+                    </div>
+
+                    <div className="p-4 rounded-xl shadow-xl border" style={{ backgroundColor: "var(--ion-color-light)", borderColor: "var(--ion-color-medium-shade)" }}>
+                        <Calendar
+                            onChange={handleDateClick}
+                            value={date}
+                            tileContent={tileContent}
+                            className="w-full text-sm sm:text-base"
+                        />
+                    </div>
+                </div>
+
+                <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+                    <div className="bg-white rounded-xl max-w-lg mx-auto p-6 shadow-xl h-full flex flex-col" style={{ backgroundColor: "var(--ion-color-white)" }}>
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="font-bold text-xl" style={{ color: "var(--ion-color-dark)" }}>
+                                Eventos del {date.toLocaleDateString()}
+                            </h2>
+                            <IonButton onClick={() => setShowModal(false)} fill="clear" className="text-gray-500">
+                                <IonIcon icon={closeCircleOutline} size="large" style={{ color: "var(--ion-color-medium-shade)" }} />
+                            </IonButton>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto pr-2">
+                            {selectedEvents.length > 0 ? (
+                                selectedEvents.map((ev) => (
+                                    <div
+                                        key={ev._id}
+                                        className="mb-4 rounded-xl shadow-md border-l-4 p-4 hover:scale-[1.02] transition-transform"
+                                        style={{
+                                            backgroundColor: "var(--ion-color-light)",
+                                            borderColor: "var(--ion-color-tertiary)",
+                                        }}
+                                    >
+                                        <h3 className="font-semibold text-lg" style={{ color: "var(--ion-color-dark)" }}>
+                                            {ev.title}
+                                        </h3>
+                                        <p className="text-gray-600">{ev.description}</p>
+                                        <p className="text-sm mt-1" style={{ color: "var(--ion-color-medium)" }}>
+                                            {new Date(ev.dateStart).toLocaleDateString()}
+                                        </p>
+                                        <div className="mt-3 flex justify-end">
+                                            <IonButton
+                                                onClick={() => openModalEdit(ev)}
+                                                fill="clear"
+                                                className="text-blue-600"
+                                                style={{ "--color": "var(--ion-color-tertiary)" }}
+                                            >
+                                                <IonIcon slot="start" icon={pencil} />
+                                                Editar
+                                            </IonButton>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-center py-10" style={{ color: "var(--ion-color-medium)" }}>
+                                    No hay eventos para este día.
+                                </p>
+                            )}
+                        </div>
+                    </div>
                 </IonModal>
+
+                <FormCreateEvent
+                    isOpen={isOpenCreate}
+                    onClose={() => setIsOpenCreate(false)}
+                    onEventCreated={handleEventCreate}
+                />
+                <FormCreateEvent
+                    isOpen={isOpenEdit}
+                    onClose={() => setIsOpenEdit(false)}
+                    onEventCreated={handleEventCreate}
+                    eventToEdit={eventToEdit}
+                />
             </IonContent>
         </IonPage>
-    )
-}
+    );
+};

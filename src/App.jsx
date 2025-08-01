@@ -9,6 +9,7 @@ import { RegisterPage } from './pages/auth/RegisterPage';
 import { TaskPage } from './pages/tasks/TaskPage';
 import { CalendarPage } from './pages/calendar/CalendarPage';
 import { CategoryPage } from './pages/category/CategoryPage';
+import { SettingPage } from './pages/setting/SettingPage';
 
 setupIonicReact();
 
@@ -25,6 +26,7 @@ function App() {
           <Route path='tasks' element={<TaskPage />} />
           <Route path='calendar' element={<CalendarPage/>}/>
           <Route path='category' element={<CategoryPage/>}/>
+          <Route path='setting' element={<SettingPage/>}/>
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

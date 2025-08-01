@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     IonButtons,
     IonButton,
@@ -10,75 +10,154 @@ import {
     IonItem,
     IonInput,
     IonLabel,
-    IonSelect,
-    IonSelectOption,
     IonDatetime,
     IonTextarea,
-} from '@ionic/react';
+} from "@ionic/react";
 import { useForm, Controller } from "react-hook-form";
+import { useUpdateEvent } from "../../shared/hooks/event/useUpdateEvent";
 import { useCreateEvent } from "../../shared/hooks/event/useCreateEvent";
+import { createEvent } from "../../services/api";
 
-export const FormCreateEvent = ({ isOpen, onClose, onEventCreated }) => {
-    const { createEvent } = useCreateEvent();
-    const [userLogged] = useState(() => JSON.parse(localStorage.getItem('user')))
+export const FormCreateEvent = ({ isOpen, onClose, onEventCreated, eventToEdit }) => {
+    const { updateEvent } = useUpdateEvent();
+    const { crateEvent } = useCreateEvent();
+    const [userLogged] = useState(() => JSON.parse(localStorage.getItem("user")));
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
 
     const { register, handleSubmit, reset, control } = useForm({
         defaultValues: {
-            title: '',
-            description: '',
+            title: "",
+            description: "",
             dateStart: new Date().toISOString(),
-            user: userLogged.id
+            user: userLogged.id,
         },
     });
 
-    const onSubmit = async (data) => {
-        try {
-            await createEvent(data);
-            if (onEventCreated) await onEventCreated();
-            reset();
-            setSelectedDate('');
-            onClose();
-        } catch (error) {
-            console.error("Error creando evento:", error);
+    useEffect(() => {
+        if (eventToEdit) {
+            reset({
+                title: eventToEdit.title || "",
+                description: eventToEdit.description || "",
+                dateStart: eventToEdit.dateStart || "",
+            });
+            setSelectedDate(eventToEdit.dateStart || "");
+        } else {
+            reset({
+                title: "",
+                description: "",
+                dateStart: "",
+            });
+            setSelectedDate("");
         }
-    }
+    }, [eventToEdit, reset]);
+
+    const onSubmit = async (data) => {
+        if (eventToEdit) {
+            await updateEvent(eventToEdit._id, data);
+        } else {
+            createEvent(data);
+        }
+        if (onEventCreated) {
+            await onEventCreated();
+        }
+        reset();
+        setSelectedDate("");
+        onClose();
+    };
 
     const handleDismiss = () => {
         reset();
-        setSelectedDate('');
+        setSelectedDate("");
         onClose();
-    }
+    };
 
     return (
         <IonModal isOpen={isOpen} onDidDismiss={handleDismiss}>
             <IonHeader>
-                <IonToolbar>
+                <IonToolbar
+                    style={{
+                        "--background": "var(--ion-color-primary)",
+                        "--color": "var(--ion-color-primary-contrast)",
+                    }}
+                >
                     <IonButtons slot="start">
-                        <IonButton onClick={handleDismiss}>Cancelar</IonButton>
+                        <IonButton
+                            onClick={handleDismiss}
+                            style={{
+                                "--color": "var(--ion-color-light)",
+                            }}
+                        >
+                            Cancelar
+                        </IonButton>
                     </IonButtons>
-                    <IonTitle> Crear Evento</IonTitle>
+                    <IonTitle className="font-bold">Editar Evento</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton strong={true} onClick={handleSubmit(onSubmit)}>
+                        <IonButton
+                            strong={true}
+                            onClick={handleSubmit(onSubmit)}
+                            style={{
+                                "--background": "var(--ion-color-light)",
+                                "--color": "var(--ion-color-dark)",
+                                borderRadius: "8px",
+                                padding: "0 12px",
+                            }}
+                        >
                             Guardar
                         </IonButton>
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
 
-            <IonContent className="ion-padding">
-                <IonItem>
-                    <IonLabel position="stacked">Titulo del evento</IonLabel>
-                    <IonInput placeholder="Ej: Examen de Matematicas" {...register('title', { required: true })} />
+            <IonContent
+                className="ion-padding"
+                style={{ "--background": "var(--ion-color-light)" }}
+            >
+                <IonItem
+                    lines="full"
+                    style={{
+                        "--background": "var(--ion-color-white)",
+                        borderRadius: "10px",
+                        marginBottom: "12px",
+                    }}
+                >
+                    <IonLabel position="stacked" style={{ color: "var(--ion-color-dark)" }}>
+                        Título del evento
+                    </IonLabel>
+                    <IonInput
+                        placeholder="Ej: Examen de Matemáticas"
+                        {...register("title", { required: true })}
+                        style={{ color: "var(--ion-color-dark)" }}
+                    />
                 </IonItem>
 
-                <IonItem>
-                    <IonLabel position="stacked">Descripción</IonLabel>
-                    <IonTextarea placeholder="Detalles del evento" {...register('description')} />
+                <IonItem
+                    lines="full"
+                    style={{
+                        "--background": "var(--ion-color-white)",
+                        borderRadius: "10px",
+                        marginBottom: "12px",
+                    }}
+                >
+                    <IonLabel position="stacked" style={{ color: "var(--ion-color-dark)" }}>
+                        Descripción
+                    </IonLabel>
+                    <IonTextarea
+                        placeholder="Detalles del evento"
+                        {...register("description")}
+                        style={{ color: "var(--ion-color-dark)" }}
+                    />
                 </IonItem>
 
-                <IonItem>
-                    <IonLabel position="stacked">Fecha del Evento</IonLabel>
+                <IonItem
+                    lines="full"
+                    style={{
+                        "--background": "var(--ion-color-white)",
+                        borderRadius: "10px",
+                    }}
+                >
+                    <IonLabel position="stacked" style={{ color: "var(--ion-color-dark)" }}>
+                        Fecha del Evento
+                    </IonLabel>
                     <Controller
                         name="dateStart"
                         control={control}
@@ -87,21 +166,26 @@ export const FormCreateEvent = ({ isOpen, onClose, onEventCreated }) => {
                                 <IonDatetime
                                     presentation="date"
                                     value={field.value}
-                                    min={new Date().toISOString().split('T')[0]}
+                                    min={new Date().toISOString().split("T")[0]}
                                     onIonChange={(e) => {
                                         field.onChange(e.detail.value);
                                         setSelectedDate(e.detail.value);
                                     }}
-                                    style={{ width: '100%' }}
+                                    style={{
+                                        width: "100%",
+                                        "--background": "var(--ion-color-light)",
+                                        "--color": "var(--ion-color-dark)",
+                                        borderRadius: "8px",
+                                    }}
                                 />
                                 {selectedDate && (
-                                    <p className="text-sm mt-2">
+                                    <p className="text-sm mt-2 text-[var(--ion-color-dark)]">
                                         Fecha seleccionada:{" "}
                                         <strong>
-                                            {new Date(selectedDate).toLocaleDateString('es-ES', {
-                                                day: '2-digit',
-                                                month: 'long',
-                                                year: 'numeric',
+                                            {new Date(selectedDate).toLocaleDateString("es-ES", {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
                                             })}
                                         </strong>
                                     </p>
@@ -112,5 +196,5 @@ export const FormCreateEvent = ({ isOpen, onClose, onEventCreated }) => {
                 </IonItem>
             </IonContent>
         </IonModal>
-    )
-}
+    );
+};
