@@ -2,38 +2,49 @@ import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import {
     IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonModal,
     IonButton,
     IonIcon,
-    IonButtons,
+    IonAlert,
 } from "@ionic/react";
 import { useGetEvents } from "../../shared/hooks/event/useGetEvents";
-import { create, pencil, closeCircleOutline } from "ionicons/icons";
+import { create, pencil, closeCircleOutline, trash } from "ionicons/icons";
 import { FormCreateEvent } from "../../components/Calendar/FormCreateEvent";
+import { useDeleteEvent } from "../../shared/hooks/event/useDeleteEvent";
 import 'react-calendar/dist/Calendar.css';
 
 export const CalendarPage = () => {
     const [date, setDate] = useState(new Date());
     const { getEvents, events } = useGetEvents();
+    const { deleteEvent } = useDeleteEvent();
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isOpenCreate, setIsOpenCreate] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [eventToEdit, setEventToEdit] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState(null);
 
     useEffect(() => {
         getEvents();
-    }, []);
+    }, []); 
 
-    const handleEventCreate = async () => {
-        await getEvents();
-        // Vuelve a establecer la fecha actual para que el modal se actualice
-        // con los eventos de hoy después de crear uno
-        handleDateClick(new Date());
+    useEffect(() => {
+        if (events.length > 0) {
+            const dayEvents = events.filter(
+                (event) => new Date(event.dateStart).toDateString() === date.toDateString()
+            );
+            setSelectedEvents(dayEvents);
+        } else {
+            setSelectedEvents([]);
+        }
+    }, [events, date]);
+
+    const handleEventCreatedOrUpdated = async () => {
+        await getEvents(); 
+        setIsOpenCreate(false); 
+        setIsOpenEdit(false); 
     };
 
     const openModalEdit = (event) => {
@@ -58,11 +69,26 @@ export const CalendarPage = () => {
 
     const handleDateClick = (selectedDate) => {
         setDate(selectedDate);
-        const dayEvents = events.filter(
-            (event) => new Date(event.dateStart).toDateString() === selectedDate.toDateString()
-        );
-        setSelectedEvents(dayEvents);
         setShowModal(true);
+    };
+
+    const handleOpenDeleteAlert = (event) => {
+        setEventToDelete(event);
+        setShowAlert(true);
+    };
+
+    const confirmDelete = async () => {
+        if (eventToDelete) {
+            try {
+                await deleteEvent(eventToDelete._id);
+                await getEvents();
+            } catch (error) {
+                console.error("Error al eliminar el evento:", error);
+            } finally {
+                setEventToDelete(null);
+                setShowAlert(false); 
+            }
+        }
     };
 
     return (
@@ -127,7 +153,7 @@ export const CalendarPage = () => {
                                         <p className="text-sm mt-1" style={{ color: "var(--ion-color-medium)" }}>
                                             {new Date(ev.dateStart).toLocaleDateString()}
                                         </p>
-                                        <div className="mt-3 flex justify-end">
+                                        <div className="mt-3 flex justify-end gap-2">
                                             <IonButton
                                                 onClick={() => openModalEdit(ev)}
                                                 fill="clear"
@@ -137,6 +163,14 @@ export const CalendarPage = () => {
                                                 <IonIcon slot="start" icon={pencil} />
                                                 Editar
                                             </IonButton>
+                                            <IonButton
+                                                onClick={() => handleOpenDeleteAlert(ev)}
+                                                fill="clear"
+                                                color="danger"
+                                            >
+                                                <IonIcon slot="start" icon={trash} />
+                                                Eliminar
+                                            </IonButton>
                                         </div>
                                     </div>
                                 ))
@@ -145,6 +179,29 @@ export const CalendarPage = () => {
                                     No hay eventos para este día.
                                 </p>
                             )}
+
+                            <IonAlert
+                                isOpen={showAlert}
+                                onDidDismiss={() => setShowAlert(false)}
+                                header={'Confirmar eliminación'}
+                                message={`¿Estás seguro de que quieres eliminar el evento "${eventToDelete?.title}"? Esta acción no se puede deshacer.`}
+                                buttons={[
+                                    {
+                                        text: 'Cancelar',
+                                        role: 'cancel',
+                                        cssClass: 'alert-cancel',
+                                        handler: () => {
+                                            setEventToDelete(null);
+                                        },
+                                    },
+                                    {
+                                        text: 'Eliminar',
+                                        role: 'destructive',
+                                        cssClass: 'alert-destructive',
+                                        handler: confirmDelete,
+                                    },
+                                ]}
+                            />
                         </div>
                     </div>
                 </IonModal>
@@ -152,12 +209,12 @@ export const CalendarPage = () => {
                 <FormCreateEvent
                     isOpen={isOpenCreate}
                     onClose={() => setIsOpenCreate(false)}
-                    onEventCreated={handleEventCreate}
+                    onEventCreated={handleEventCreatedOrUpdated}
                 />
                 <FormCreateEvent
                     isOpen={isOpenEdit}
                     onClose={() => setIsOpenEdit(false)}
-                    onEventCreated={handleEventCreate}
+                    onEventCreated={handleEventCreatedOrUpdated}
                     eventToEdit={eventToEdit}
                 />
             </IonContent>
