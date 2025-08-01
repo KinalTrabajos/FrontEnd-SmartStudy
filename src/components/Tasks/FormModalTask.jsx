@@ -68,7 +68,9 @@ export const FormTaskModal = ({ isOpen, onClose, onTaskCreated, taskToEdit }) =>
         } else {
             createTask(data);
         }
-        if (onTaskCreated) await onTaskCreated();
+        if (onTaskCreated){
+            await onTaskCreated();
+        } 
         reset();
         setSelectedDate('');
         onClose();
