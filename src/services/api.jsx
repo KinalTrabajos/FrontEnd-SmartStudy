@@ -14,7 +14,7 @@ apiStudy.interceptors.request.use(
         const user = localStorage.getItem('user');
         if (user) {
             const token = JSON.parse(user).token;
-            config.headers['x-token'] = token; 
+            config.headers['x-token'] = token;
         }
         return config;
     },
@@ -26,27 +26,16 @@ export const login = async (data) => {
     try {
         return await apiStudy.post('/auth/login', data);
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const register = async(data) => {
+export const register = async (data) => {
     try {
-        return await apiStudy.post('/auth/register',data)        
-    } catch (e) {
-        return{
-            error: true,
-            e
-        }
-    }
-}
-
-export const createTask = async(data) => {
-    try {
-        return await apiStudy.post('/toDoList/create-ToDoList',data)
+        return await apiStudy.post('/auth/register', data)
     } catch (e) {
         return {
             error: true,
@@ -55,40 +44,51 @@ export const createTask = async(data) => {
     }
 }
 
-export const getTask = async() => {
+export const createTask = async (data) => {
+    try {
+        return await apiStudy.post('/toDoList/create-ToDoList', data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getTask = async () => {
     try {
         return await apiStudy.get('/toDoList/get-ToDosList')
     } catch (e) {
-        return{
-            error:true,
+        return {
+            error: true,
             e
         }
     }
 }
 
-export const deleteTask = async(id) => {
+export const deleteTask = async (id) => {
     try {
         return await apiStudy.delete(`/toDoList/delete-ToDoList/${id}`)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const updateTask = async (id ,data) => {
+export const updateTask = async (id, data) => {
     try {
         return await apiStudy.put(`/toDoList/update-ToDoList/${id}`, data)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const getCategory = async() => {
+export const getCategory = async () => {
     try {
         return await apiStudy.get('/categorySubject/viewSubject')
     } catch (e) {
@@ -99,7 +99,7 @@ export const getCategory = async() => {
     }
 }
 
-export const getEvents = async() => {
+export const getEvents = async () => {
     try {
         return await apiStudy.get('/event/')
     } catch (e) {
@@ -110,120 +110,153 @@ export const getEvents = async() => {
     }
 }
 
-export const createEvent = async(data) => {
+export const createEvent = async (data) => {
     try {
-        return await apiStudy.post('/event/',data)
+        return await apiStudy.post('/event/', data)
     } catch (e) {
-        return{
-            error: true,
-            e
-        }
-    }
-} 
-
-export const updateEvent = async(id, data) => {
-    try {
-        return await apiStudy.put(`/event/${id}`,data)
-    } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const getInformationUser = async() => {
+export const updateEvent = async (id, data) => {
+    try {
+        return await apiStudy.put(`/event/${id}`, data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getInformationUser = async () => {
     try {
         return await apiStudy.get(`/users/viewUserbyId`)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-
-export const addPublication = async(data)=>{
+export const updateUser = async (id, data) => {
     try {
-        return await apiStudy.post('/publications/',data)
+        return await apiStudy.put(`/users/updateUser/${id}`, data)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const viewPublication = async()=> {
+export const updatePassword = async (id, data) => {
+    try {
+        return await apiStudy.put(`/users//updatePassword/${id}`, data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+
+export const addPublication = async (data) => {
+    try {
+        return await apiStudy.post('/publications/', data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const viewPublication = async () => {
     try {
         return await apiStudy.get('/publications/')
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const deletePublication = async(id) => {
+export const deletePublication = async (id) => {
     try {
         return await apiStudy.delete(`/publications/${id}`)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const updatePublication = async(id, data)=>{
+export const updatePublication = async (id, data) => {
     try {
-        return await apiStudy.put(`/publications/${id}`,data)
+        return await apiStudy.put(`/publications/${id}`, data)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const addComent = async(data) => {
+export const addComent = async (data) => {
     try {
         return await apiStudy.post('/comments', data)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const viewCommentidpublication = async(id) => {
+export const viewCommentidpublication = async (id) => {
     try {
         return await apiStudy.get(`/comments/post/${id}`)
     } catch (e) {
-        return{
+        return {
             error: true,
             e
         }
     }
 }
 
-export const deletComment = async(id) => {
-    try{
+export const deletComment = async (id) => {
+    try {
         return await apiStudy.delete(`/comments/${id}`)
-    } catch (e){
-        return{
+    } catch (e) {
+        return {
             error: true,
             e
         }
     }
 }
 
-export const updateComment = async(id,data) => {
+export const updateComment = async (id, data) => {
     try {
         return await apiStudy.put(`/comments/${id}`, data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const deleteEvent = async (id) => {
+    try {
+        return await apiStudy.delete(`/event/${id}`);
     } catch (e) {
         return{
             error: true,

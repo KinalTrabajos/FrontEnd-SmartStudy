@@ -14,7 +14,6 @@ import {
   IonTitle,
   IonContent,
   IonAlert
-
 } from '@ionic/react';
 import { create, trash, reorderFourOutline } from 'ionicons/icons';
 import { FormTaskModal } from '../../components/Tasks/FormModalTask';
@@ -27,101 +26,160 @@ export const TaskPage = () => {
   const { deleteTask } = useDeleteTask();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
   useEffect(() => {
-    getTasks()
-  }, [])
+    getTasks();
+  }, []);
 
   const handleTaskCreate = async () => {
-    await getTasks()
-  }
+    await getTasks();
+  };
 
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     await getTasks();
-  }
+  };
 
   const toggleTaskCompletion = (taskId) => {
     setSelectedTaskId(taskId);
-    console.log(taskId);
-    setIsCameraOpen(true)
-  }
+    setIsCameraOpen(true);
+  };
 
   return (
-    <div className="p-6 animate-fade-in">
-      <h1 className="text-4xl font-bold text-center mb-6 text-blue-800">Mis Tareas</h1>
+    <div className="p-6 animate-fade-in" style={{ backgroundColor: 'var(--ion-color-light)', minHeight: '100vh' }}>
+      <h1
+        className="text-4xl font-bold text-center mb-6"
+        style={{ color: 'var(--ion-color-primary)' }}
+      >
+        Mis Tareas
+      </h1>
 
+      {/* Botón Crear Tarea */}
       <IonButton
         onClick={() => setIsOpen(true)}
         expand="block"
-        className="mb-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl shadow-xl transition-transform transform hover:scale-105"
+        style={{
+          background: 'linear-gradient(90deg, var(--ion-color-primary), var(--ion-color-dark))',
+          color: 'var(--ion-color-light)',
+          fontWeight: '600',
+          borderRadius: '12px',
+          padding: '12px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+        }}
       >
         <IonIcon slot="start" icon={create} />
         Crear nueva tarea
       </IonButton>
 
-      <IonList className="bg-white rounded-2xl shadow-xl divide-y divide-gray-200">
+      {/* Lista de Tareas */}
+      <IonList
+        style={{
+          background: 'var(--ion-color-white)',
+          borderRadius: '16px',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          marginTop: '20px'
+        }}
+      >
         {!isDisabled && (
-          <div className="py-2 px-4 text-sm text-blue-600 bg-blue-50 font-medium">
+          <div
+            style={{
+              backgroundColor: 'var(--ion-color-light)',
+              color: 'var(--ion-color-primary)',
+              fontWeight: '500',
+              padding: '8px 16px',
+              fontSize: '14px'
+            }}
+          >
             Arrastra para reordenar.
           </div>
         )}
 
-        <IonReorderGroup disabled={isDisabled} >
+        <IonReorderGroup disabled={isDisabled}>
           {tasks.length === 0 ? (
-            <IonItem className="py-4 text-center text-gray-500">
-              <IonLabel>No hay tareas. ¡Crea una!</IonLabel>
+            <IonItem style={{ background: 'var(--ion-color-light)' }}>
+              <IonLabel style={{ color: 'var(--ion-color-dark)', textAlign: 'center' }}>
+                No hay tareas. ¡Crea una!
+              </IonLabel>
             </IonItem>
           ) : (
-            tasks.map(task => (
+            tasks.map((task) => (
               <IonItem
                 key={task._id}
-                className={`px-4 py-3 flex items-center justify-between transition-transform transform hover:scale-105 ${task.completed ? 'opacity-50' : ''
-                  }`}
+                style={{
+                  background: 'var(--ion-color-white)',
+                  transition: 'transform 0.2s ease',
+                  opacity: task.completed ? '0.6' : '1'
+                }}
+                className="hover:scale-[1.02]"
               >
                 <div className="flex items-center gap-3 flex-grow">
                   <input
                     type="checkbox"
                     checked={task.taskStatus === 'Completed'}
                     onChange={() => toggleTaskCompletion(task._id)}
-                    className="h-5 w-5 text-blue-600"
+                    style={{
+                      accentColor: 'var(--ion-color-primary)',
+                      height: '20px',
+                      width: '20px'
+                    }}
                   />
-                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  <IonLabel
+                    style={{
+                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
+                      textDecoration: task.completed ? 'line-through' : 'none'
+                    }}
+                  >
                     {task.taskName}
                   </IonLabel>
-                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  <IonLabel
+                    style={{
+                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
+                      textDecoration: task.completed ? 'line-through' : 'none'
+                    }}
+                  >
                     {task.taskDescription}
                   </IonLabel>
-                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  <IonLabel
+                    style={{
+                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
+                      textDecoration: task.completed ? 'line-through' : 'none'
+                    }}
+                  >
                     {task.dueDate}
                   </IonLabel>
-                  <IonLabel className={`text-lg ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  <IonLabel
+                    style={{
+                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
+                      textDecoration: task.completed ? 'line-through' : 'none'
+                    }}
+                  >
                     {task.priority}
                   </IonLabel>
                 </div>
 
                 <IonButtons slot="end" className="flex items-center gap-2">
                   <IonButton
-                    id='delete-alert'
+                    id="delete-alert"
                     fill="clear"
-                    className="text-red-500 hover:text-red-700"
+                    style={{ color: 'red' }}
                     onClick={() => {
-                      setSelectedTaskId(task._id)
-                      setShowAlert(true)
+                      setSelectedTaskId(task._id);
+                      setShowAlert(true);
                     }}
                   >
                     <IonIcon icon={trash} slot="icon-only" />
                   </IonButton>
 
                   <IonButton
-                    fill='clear'
+                    fill="clear"
+                    style={{ color: 'var(--ion-color-primary)' }}
                     onClick={() => {
                       setTaskToEdit(task);
-                      setIsOpen(true)
+                      setIsOpen(true);
                     }}
                   >
                     Editar
@@ -129,7 +187,7 @@ export const TaskPage = () => {
 
                   {!isDisabled && (
                     <IonReorder slot="end">
-                      <IonIcon icon={reorderFourOutline} className="text-gray-400 hover:text-gray-600" />
+                      <IonIcon icon={reorderFourOutline} style={{ color: 'var(--ion-color-accent)' }} />
                     </IonReorder>
                   )}
                 </IonButtons>
@@ -139,34 +197,41 @@ export const TaskPage = () => {
         </IonReorderGroup>
       </IonList>
 
-
+      {/* Alert */}
       <IonAlert
         isOpen={showAlert}
         header="¿Desea eliminar esta tarea?"
-        onDidDismiss={() => setShowAlert(false)}
+        message="Esta acción no se puede deshacer."
+        cssClass="custom-alert"
         buttons={[
           {
             text: 'Cancelar',
             role: 'cancel',
-            handler: () => {
-              console.log('Cancelado');
-            },
+            cssClass: 'alert-button-cancel',
           },
           {
             text: 'Confirmar',
             role: 'confirm',
-            handler: () => {
-              handleDeleteTask(selectedTaskId);
-            },
+            cssClass: 'alert-button-confirm',
+            handler: () => handleDeleteTask(selectedTaskId),
           },
         ]}
+        onDidDismiss={() => setShowAlert(false)}
       />
-      <FormTaskModal isOpen={isOpen} onClose={() => setIsOpen(false)} onTaskCreated={handleTaskCreate} taskToEdit={taskToEdit} />
-      <CameraModal isOpen={isCameraOpen} onClose={() => setIsCameraOpen(false)} taskId={selectedTaskId} onTaskCreated={handleTaskCreate}/>
+
+      {/* Modales */}
+      <FormTaskModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onTaskCreated={handleTaskCreate}
+        taskToEdit={taskToEdit}
+      />
+      <CameraModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        taskId={selectedTaskId}
+        onTaskCreated={handleTaskCreate}
+      />
     </div>
   );
 };
-
-
-
-//https://chatgpt.com/share/68661e91-4598-800e-986d-a81e5f7af6db
