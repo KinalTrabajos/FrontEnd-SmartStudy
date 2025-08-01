@@ -38,6 +38,7 @@ export const CommentList = ({ publicationId }) => {
         )
       );
       setEditingId(null);
+      setEditedContent("");
     }
   };
 
@@ -63,22 +64,37 @@ export const CommentList = ({ publicationId }) => {
           className="ion-no-padding rounded-lg mb-2 shadow-sm"
         >
           {editingId === comment._id ? (
-            <div className="flex items-center w-full p-2 bg-white rounded-lg">
+            <div className="flex items-center w-full p-2 bg-white rounded-lg transition-all duration-300 ease-in-out scale-100">
               <IonInput
                 value={editedContent}
                 onIonChange={(e) => setEditedContent(e.detail.value)}
                 className="flex-grow mr-2 border-none"
+                animated
               />
-              <IonButton
-                onClick={() => handleSave(comment._id)}
-                color="success"
-                fill="clear"
-              >
-                <IonIcon icon={saveOutline} />
-              </IonButton>
+              <div className="flex items-center space-x-2 ml-2">
+                <IonButton
+                  onClick={() => handleSave(comment._id)}
+                  color="success"
+                  fill="clear"
+                  size="small"
+                >
+                  <IonIcon icon={saveOutline} />
+                </IonButton>
+                <IonButton
+                  onClick={() => {
+                    setEditingId(null);
+                    setEditedContent("");
+                  }}
+                  color="medium"
+                  fill="clear"
+                  size="small"
+                >
+                  Cancelar
+                </IonButton>
+              </div>
             </div>
           ) : (
-            <div className="flex items-center w-full p-2 bg-white rounded-lg">
+            <div className="flex items-center w-full p-2 bg-white rounded-lg transition-all duration-300 ease-in-out scale-100">
               <IonLabel className="ion-text-wrap text-black flex-grow">
                 {comment.content}
               </IonLabel>
