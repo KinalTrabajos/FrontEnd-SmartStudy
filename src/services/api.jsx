@@ -110,3 +110,24 @@ export const viewCommentidpublication = async(id) => {
     }
 }
 
+export const deletComment = async(id) => {
+    try{
+        return await apiStudy.delete(`/comments/${id}`)
+    } catch (e){
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const updateComment = async(id,data) => {
+    try {
+        return await apiStudy.put(`/comments/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}

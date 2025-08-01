@@ -117,7 +117,7 @@ const PublicationForm = () => {
     <IonPage>
       <IonContent className="ion-padding bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen">
         <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto py-12">
-          {userRole === "ADMIN_ROLE" && (
+        {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
             <div className="lg:w-1/2 bg-white rounded-xl shadow-2xl p-8">
               <h2 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
                 Crea una Publicación
@@ -190,7 +190,7 @@ const PublicationForm = () => {
                       {pub.title}
                     </IonCardTitle>
 
-                    {userRole === "ADMIN_ROLE" && (
+                    {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
                       <div className="flex gap-4">
                         <IonButton
                           size="small"
@@ -218,7 +218,7 @@ const PublicationForm = () => {
                         </IonButton>
                       </div>
                     )}
-                    {userRole === "USER_ROLE" && (
+                     {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
                       <div className="flex gap-4">
                         <IonButton
                           size="small"
@@ -246,6 +246,8 @@ const PublicationForm = () => {
                         )}
                       </div>
                     )}
+
+                    
                   </IonCardHeader>
                   <IonCardContent className="text-gray-800 px-6 py-5 text-lg leading-relaxed">
                     {pub.content}
@@ -288,7 +290,7 @@ const PublicationForm = () => {
                 onClick={() => setEditModalOpen(false)}
                 className="rounded-lg text-lg font-semibold"
                 expand="block"
-              >
+              > 
                 <IonIcon icon={closeOutline} slot="start" />
                 Cancelar
               </IonButton>

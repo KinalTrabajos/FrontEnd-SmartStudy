@@ -19,6 +19,7 @@ import '@ionic/react/css/text-alignment.css'
 import '@ionic/react/css/text-transformation.css'
 import '@ionic/react/css/flex-utils.css'
 import '@ionic/react/css/display.css'
+import './theme/variables.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
