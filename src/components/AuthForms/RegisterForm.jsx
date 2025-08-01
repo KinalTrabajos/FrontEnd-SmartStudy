@@ -20,7 +20,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { mail, lockClosed, eye, eyeOff, person, personAdd } from "ionicons/icons";
-import { useState } from "react";
+import React ,{ useState } from "react";
 import { useRegister } from "../../shared/hooks/auth/useRegister";
 import { useNavigate } from "react-router-dom";
 

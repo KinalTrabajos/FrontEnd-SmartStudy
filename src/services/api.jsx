@@ -44,6 +44,106 @@ export const register = async(data) => {
     }
 }
 
+export const createTask = async(data) => {
+    try {
+        return await apiStudy.post('/toDoList/create-ToDoList',data)
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getTask = async() => {
+    try {
+        return await apiStudy.get('/toDoList/get-ToDosList')
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}
+
+export const deleteTask = async(id) => {
+    try {
+        return await apiStudy.delete(`/toDoList/delete-ToDoList/${id}`)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const updateTask = async (id ,data) => {
+    try {
+        return await apiStudy.put(`/toDoList/update-ToDoList/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const getCategory = async() => {
+    try {
+        return await apiStudy.get('/categorySubject/viewSubject')
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getEvents = async() => {
+    try {
+        return await apiStudy.get('/event/')
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const createEvent = async(data) => {
+    try {
+        return await apiStudy.post('/event/',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+} 
+
+export const updateEvent = async(id, data) => {
+    try {
+        return await apiStudy.put(`/event/${id}`,data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const getInformationUser = async() => {
+    try {
+        return await apiStudy.get(`/users/viewUserbyId`)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+
 export const addPublication = async(data)=>{
     try {
         return await apiStudy.post('/publications/',data)

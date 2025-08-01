@@ -7,6 +7,9 @@ import { PrincipalPage } from './components/Dashboard/PrincipalPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { TaskPage } from './pages/tasks/TaskPage';
+import { CalendarPage } from './pages/calendar/CalendarPage';
+import { CategoryPage } from './pages/category/CategoryPage';
+import { SettingPage } from './pages/setting/SettingPage';
 import { TaskForm } from './components/Tasks/TaskForm';
 import { PublicationPage } from './pages/Publicationes/PublicationPage';
 import { ComentsPage } from './pages/Coment/ComentsPage';
@@ -26,6 +29,9 @@ function App() {
         <Route path="/dashboard" element={<MenuComponent />}>
           <Route index element={<PrincipalPage />} />
           <Route path='tasks' element={<TaskPage />} />
+          <Route path='calendar' element={<CalendarPage/>}/>
+          <Route path='category' element={<CategoryPage/>}/>
+          <Route path='setting' element={<SettingPage/>}/>
           <Route path='tasks/create' element={<TaskForm mode='create'/>}/>
           <Route path='publication' element={<PublicationPage/>} />
           <Route path='comentario' element={<ComentsPage/>} />
