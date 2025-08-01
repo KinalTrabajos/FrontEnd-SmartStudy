@@ -120,3 +120,36 @@ export const createEvent = async(data) => {
         }
     }
 } 
+
+export const addCategory = async(data) => {
+    try {
+        return await apiStudy.post('/categorySubject/requestCreateSubject',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+} 
+
+export const viewRequestPendingCategory = async() => {
+    try {
+        return await apiStudy.get('/categorySubject/viewRequestSubject')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const assigname = async(id,data) => {
+    try {
+        return await apiStudy.post(`/categorySubject/assignMeSubject/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
