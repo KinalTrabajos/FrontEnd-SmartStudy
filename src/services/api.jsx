@@ -44,7 +44,6 @@ export const register = async(data) => {
     }
 }
 
-<<<<<<< HEAD
 export const createTask = async(data) => {
     try {
         return await apiStudy.post('/toDoList/create-ToDoList',data)
@@ -70,11 +69,6 @@ export const getTask = async() => {
 export const deleteTask = async(id) => {
     try {
         return await apiStudy.delete(`/toDoList/delete-ToDoList/${id}`)
-=======
-export const addPublication = async(data)=>{
-    try {
-        return await apiStudy.post('/publications/',data)
->>>>>>> origin/f-rosas
     } catch (e) {
         return{
             error: true,
@@ -83,15 +77,9 @@ export const addPublication = async(data)=>{
     }
 }
 
-<<<<<<< HEAD
 export const updateTask = async (id ,data) => {
     try {
         return await apiStudy.put(`/toDoList/update-ToDoList/${id}`, data)
-=======
-export const viewPublication = async()=> {
-    try {
-        return await apiStudy.get('/publications/')
->>>>>>> origin/f-rosas
     } catch (e) {
         return{
             error: true,
@@ -100,7 +88,6 @@ export const viewPublication = async()=> {
     }
 }
 
-<<<<<<< HEAD
 export const getCategory = async() => {
     try {
         return await apiStudy.get('/categorySubject/viewSubject')
@@ -137,11 +124,6 @@ export const createEvent = async(data) => {
 export const updateEvent = async(id, data) => {
     try {
         return await apiStudy.put(`/event/${id}`,data)
-=======
-export const deletePublication = async(id) => {
-    try {
-        return await apiStudy.delete(`/publications/${id}`)
->>>>>>> origin/f-rosas
     } catch (e) {
         return{
             error: true,
@@ -150,24 +132,60 @@ export const deletePublication = async(id) => {
     }
 }
 
-<<<<<<< HEAD
 export const getInformationUser = async() => {
     try {
         return await apiStudy.get(`/users/viewUserbyId`)
-=======
-export const updatePublication = async(id, data)=>{
-    try {
-        return await apiStudy.put(`/publications/${id}`,data)
->>>>>>> origin/f-rosas
     } catch (e) {
         return{
             error: true,
             e
         }
     }
-<<<<<<< HEAD
 }
-=======
+
+
+export const addPublication = async(data)=>{
+    try {
+        return await apiStudy.post('/publications/',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const viewPublication = async()=> {
+    try {
+        return await apiStudy.get('/publications/')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const deletePublication = async(id) => {
+    try {
+        return await apiStudy.delete(`/publications/${id}`)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const updatePublication = async(id, data)=>{
+    try {
+        return await apiStudy.put(`/publications/${id}`,data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
 }
 
 export const addComent = async(data) => {
@@ -213,4 +231,3 @@ export const updateComment = async(id,data) => {
         }
     }
 }
->>>>>>> origin/f-rosas
