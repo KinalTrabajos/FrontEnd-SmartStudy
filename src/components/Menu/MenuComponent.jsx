@@ -44,9 +44,14 @@ export const MenuComponent = () => {
                 <IonLabel>Calendario</IonLabel>
               </IonItem>
             </IonMenuToggle>
-             <IonMenuToggle autoHide={false}>
+            <IonMenuToggle autoHide={false}>
               <IonItem routerLink="/dashboard/category" routerDirection="none">
                 <IonLabel>Categorias</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle autoHide={false}>
+              <IonItem routerLink="/dashboard/logros" routerDirection="none">
+                <IonLabel>Logros</IonLabel>
               </IonItem>
             </IonMenuToggle>
           </IonList>

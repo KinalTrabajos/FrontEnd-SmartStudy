@@ -153,3 +153,14 @@ export const assigname = async(id,data) => {
         }
     }
 }
+
+export const viewSucces = async() => {
+    try {
+        return await apiStudy.get('/successes/viewSuccesses')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
