@@ -1,13 +1,13 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { useState } from 'react';
 import {
-    IonModal,
-    IonButton,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonButtons,
+  IonModal,
+  IonButton,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButtons,
 } from '@ionic/react';
 import { useUpdateTask } from '../../shared/hooks/tasks/useUpdateTask';
 

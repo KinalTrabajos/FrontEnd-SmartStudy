@@ -12,7 +12,12 @@ import { CategoryPage } from './pages/category/CategoryPage';
 import { SettingPage } from './pages/setting/SettingPage';
 import { PublicationPage } from './pages/Publicationes/PublicationPage';
 import { ComentsPage } from './pages/Coment/ComentsPage';
+<<<<<<< HEAD
 import { ProductsPage } from './pages/changePoints/ProductsPage';
+=======
+import { FalshCardsPage } from './pages/FalshCards/FalshCardsPage';
+
+>>>>>>> origin/f-rosas
 
 
 
@@ -35,6 +40,7 @@ function App() {
           <Route path='publication' element={<PublicationPage/>} />
           <Route path='comentario' element={<ComentsPage/>} />
           <Route path='products' element={<ProductsPage/>}/>
+          <Route path='falshcard' element={<FalshCardsPage/>} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

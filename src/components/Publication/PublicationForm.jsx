@@ -24,7 +24,7 @@ import { useAddPublication } from "../../shared/hooks/publication/useAddPublicat
 import { useDeletePublication } from "../../shared/hooks/publication/useDeletePublication";
 import { useViewPublications } from "../../shared/hooks/publication/useViewPublications";
 import { useUpdatePublication } from "../../shared/hooks/publication/useUpdatePublication";
-import {CommentList} from "../Coments/CommentList"
+import { CommentList } from "../Coments/CommentList";
 import { ComentForm } from "../Coments/ComentForms";
 
 import toast from "react-hot-toast";
@@ -117,7 +117,7 @@ const PublicationForm = () => {
     <IonPage>
       <IonContent className="ion-padding bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen">
         <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto py-12">
-        {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
+          {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
             <div className="lg:w-1/2 bg-white rounded-xl shadow-2xl p-8">
               <h2 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
                 Crea una Publicación
@@ -190,7 +190,8 @@ const PublicationForm = () => {
                       {pub.title}
                     </IonCardTitle>
 
-                    {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
+                    {/* Mostrar editar/eliminar si es admin o si es el autor */}
+                    {(userRole === "ADMIN_ROLE" || (userRole === "USER_ROLE" && author === pub.author)) && (
                       <div className="flex gap-4">
                         <IonButton
                           size="small"
@@ -218,7 +219,9 @@ const PublicationForm = () => {
                         </IonButton>
                       </div>
                     )}
-                     {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
+
+                    {/* Botón de comentar sigue igual */}
+                    {(userRole === "ADMIN_ROLE" || userRole === "USER_ROLE") && (
                       <div className="flex gap-4">
                         <IonButton
                           size="small"
@@ -240,24 +243,17 @@ const PublicationForm = () => {
                               isOpen={true}
                               onClose={() => setShowCommentForm(false)}
                             />
-                            
                           </>
-                          
                         )}
                       </div>
                     )}
-
-                    
                   </IonCardHeader>
                   <IonCardContent className="text-gray-800 px-6 py-5 text-lg leading-relaxed">
                     {pub.content}
                   </IonCardContent>
-                  
-                  
                   <div className="px-6 pb-4">
-                    <CommentList publicationId={pub._id}/>
+                    <CommentList publicationId={pub._id} />
                   </div>
-                
                 </IonCard>
               ))
             )}
@@ -290,7 +286,7 @@ const PublicationForm = () => {
                 onClick={() => setEditModalOpen(false)}
                 className="rounded-lg text-lg font-semibold"
                 expand="block"
-              > 
+              >
                 <IonIcon icon={closeOutline} slot="start" />
                 Cancelar
               </IonButton>
