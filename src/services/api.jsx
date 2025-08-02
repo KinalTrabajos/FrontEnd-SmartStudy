@@ -264,3 +264,69 @@ export const deleteEvent = async (id) => {
         }
     }
 }
+
+export const getProducts = async() => {
+    try {
+        return await apiStudy.get('/pucharseWithPoints/viewProduct');
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}
+
+export const confirmPurchase = async() => {
+    try {
+        return await apiStudy.post('/pucharseWithPoints/confirmPurchase')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const shoppingCartUser = async(id,data) => {
+    try {
+        return await apiStudy.post(`/pucharseWithPoints/shoppingCartUser/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const createProduct = async(data) => {
+    try {
+        return await apiStudy.post('/pucharseWithPoints/createProduct',data);
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}
+
+export const updateProduct = async(id, data) => {
+    try {
+        return await apiStudy.put(`/pucharseWithPoints/updateProduct/${id}`,data);
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}
+
+export const deleteProduct = async(id) => {
+    try {
+        return await apiStudy.delete(`/pucharseWithPoints/deleteProduct/${id}`);
+    } catch (e) {
+        return{
+            error:true,
+            e
+        }
+    }
+}

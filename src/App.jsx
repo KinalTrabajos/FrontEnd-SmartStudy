@@ -12,6 +12,7 @@ import { CategoryPage } from './pages/category/CategoryPage';
 import { SettingPage } from './pages/setting/SettingPage';
 import { PublicationPage } from './pages/Publicationes/PublicationPage';
 import { ComentsPage } from './pages/Coment/ComentsPage';
+import { ProductsPage } from './pages/changePoints/ProductsPage';
 
 
 
@@ -33,6 +34,7 @@ function App() {
           <Route path='setting' element={<SettingPage/>}/>
           <Route path='publication' element={<PublicationPage/>} />
           <Route path='comentario' element={<ComentsPage/>} />
+          <Route path='products' element={<ProductsPage/>}/>
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

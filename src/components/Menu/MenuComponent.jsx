@@ -7,7 +7,8 @@ import {
 
 import {
   search, personCircle, chevronUpCircle,
-  colorPalette, document, globe, home, list, settings, calendar, folder, chatbubble, newspaper
+  colorPalette, document, globe, home, list, settings, calendar, folder, chatbubble, newspaper,
+  link
 } from 'ionicons/icons';
 
 import { Outlet } from 'react-router-dom';
@@ -33,6 +34,7 @@ export const MenuComponent = () => {
               { link: "/dashboard/category", icon: folder, label: "Categorías" },
               { link: "/dashboard/publication", icon: newspaper, label: "Publicaciones" },
               { link: "/dashboard/comentario", icon: chatbubble, label: "Comentarios" },
+              { link: "/dashboard/products", label: "Canejar Puntos"}
             ].map((item, idx) => (
               <IonMenuToggle key={idx} autoHide={false}>
                 <IonItem
@@ -76,24 +78,6 @@ export const MenuComponent = () => {
             <Outlet />
           </div>
         </IonContent>
-
-        {/* FAB flotante */}
-        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton style={{ "--background": "var(--color-primary)" }} className="shadow-xl hover:scale-105 transition-transform">
-            <IonIcon icon={chevronUpCircle} style={{ color: "var(--color-white)" }} />
-          </IonFabButton>
-          <IonFabList side="top">
-            <IonFabButton style={{ "--background": "var(--color-accent)" }} className="hover:scale-105 transition">
-              <IonIcon icon={document} style={{ color: "var(--color-secondary)" }} />
-            </IonFabButton>
-            <IonFabButton style={{ "--background": "var(--color-light)" }} className="hover:scale-105 transition">
-              <IonIcon icon={colorPalette} style={{ color: "var(--color-primary)" }} />
-            </IonFabButton>
-            <IonFabButton style={{ "--background": "var(--color-white)" }} className="hover:scale-105 transition">
-              <IonIcon icon={globe} style={{ color: "var(--color-secondary)" }} />
-            </IonFabButton>
-          </IonFabList>
-        </IonFab>
       </IonPage>
     </>
   );
