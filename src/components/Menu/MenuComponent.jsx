@@ -7,7 +7,8 @@ import {
 
 import {
   search, personCircle, chevronUpCircle,
-  colorPalette, document, globe, home, list, settings, calendar, folder, chatbubble, newspaper
+  colorPalette, document, globe, home, list, settings,
+  calendar, folder, chatbubble, newspaper, helpCircle
 } from 'ionicons/icons';
 
 import { Outlet } from 'react-router-dom';
@@ -33,6 +34,7 @@ export const MenuComponent = () => {
               { link: "/dashboard/category", icon: folder, label: "Categorías" },
               { link: "/dashboard/publication", icon: newspaper, label: "Publicaciones" },
               { link: "/dashboard/comentario", icon: chatbubble, label: "Comentarios" },
+              { link: "/dashboard/falshcard", icon: helpCircle, label: "Preguntas y respuestas" }, // <-- NUEVO ITEM
             ].map((item, idx) => (
               <IonMenuToggle key={idx} autoHide={false}>
                 <IonItem

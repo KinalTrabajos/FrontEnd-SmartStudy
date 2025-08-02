@@ -5,15 +5,25 @@ import {
   IonItem,
   IonLabel,
 } from "@ionic/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useViewPublications } from "../../shared/hooks/publication/useViewPublications";
 import { CommentList } from "./CommentList";
 
 export const ComentsPublication = () => {
   const { publications, getPublications } = useViewPublications();
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     getPublications();
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user.id) setUserId(user.id);
+      } catch (error) {
+        console.error("Error al parsear el usuario desde localStorage:", error);
+      }
+    }
   }, []);
 
   const formatDate = (dateString) => {
@@ -56,7 +66,7 @@ export const ComentsPublication = () => {
 
             <div className="pt-2 pb-4 px-6">
               <hr className="border-t border-gray-200 mb-4" />
-              <CommentList publicationId={pub._id} />
+              <CommentList publicationId={pub._id} userId={userId} />
             </div>
           </IonCard>
         ))}

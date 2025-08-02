@@ -16,11 +16,11 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useUpdateEvent } from "../../shared/hooks/event/useUpdateEvent";
 import { useCreateEvent } from "../../shared/hooks/event/useCreateEvent";
-import { createEvent } from "../../services/api";
+// Aquí ya no importamos createEvent de services/api, ya que el hook se encarga de eso.
 
 export const FormCreateEvent = ({ isOpen, onClose, onEventCreated, eventToEdit }) => {
     const { updateEvent } = useUpdateEvent();
-    const { crateEvent } = useCreateEvent();
+    const { createEvent } = useCreateEvent(); // Usamos la función del hook
     const [userLogged] = useState(() => JSON.parse(localStorage.getItem("user")));
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
 
@@ -45,9 +45,9 @@ export const FormCreateEvent = ({ isOpen, onClose, onEventCreated, eventToEdit }
             reset({
                 title: "",
                 description: "",
-                dateStart: "",
+                dateStart: new Date().toISOString(), // Se inicializa con la fecha actual
             });
-            setSelectedDate("");
+            setSelectedDate(new Date().toISOString());
         }
     }, [eventToEdit, reset]);
 
@@ -55,7 +55,8 @@ export const FormCreateEvent = ({ isOpen, onClose, onEventCreated, eventToEdit }
         if (eventToEdit) {
             await updateEvent(eventToEdit._id, data);
         } else {
-            createEvent(data);
+            // Se llama a la función del hook en lugar de la función de API directamente
+            await createEvent(data);
         }
         if (onEventCreated) {
             await onEventCreated();
@@ -90,7 +91,7 @@ export const FormCreateEvent = ({ isOpen, onClose, onEventCreated, eventToEdit }
                             Cancelar
                         </IonButton>
                     </IonButtons>
-                    <IonTitle className="font-bold">Editar Evento</IonTitle>
+                    <IonTitle className="font-bold">{eventToEdit ? "Editar Evento" : "Crear Evento"}</IonTitle>
                     <IonButtons slot="end">
                         <IonButton
                             strong={true}

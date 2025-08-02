@@ -6,7 +6,7 @@ import { IonList, IonItem, IonLabel, IonButton, IonInput } from "@ionic/react";
 import { createOutline, trashOutline, saveOutline } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 
-export const CommentList = ({ publicationId }) => {
+export const CommentList = ({ publicationId, userId }) => {
   const { comments, loadingComments } = useViewComentId(publicationId);
   const { deleteComment } = useDeleteComment();
   const { putComment } = usePutComent();
@@ -98,24 +98,30 @@ export const CommentList = ({ publicationId }) => {
               <IonLabel className="ion-text-wrap text-black flex-grow">
                 {comment.content}
               </IonLabel>
-              <div className="flex items-center space-x-2 ml-4">
-                <IonButton
-                  onClick={() => handleEdit(comment)}
-                  color="warning"
-                  fill="clear"
-                  size="small"
-                >
-                  <IonIcon icon={createOutline} />
-                </IonButton>
-                <IonButton
-                  onClick={() => handleDelete(comment._id)}
-                  color="danger"
-                  fill="clear"
-                  size="small"
-                >
-                  <IonIcon icon={trashOutline} />
-                </IonButton>
-              </div>
+              {/* Solo mostrar los botones si el comentario es del usuario actual */}
+              {(
+                comment.authorComment === userId ||
+                (comment.authorComment?._id && comment.authorComment._id === userId)
+              ) && (
+                <div className="flex items-center space-x-2 ml-4">
+                  <IonButton
+                    onClick={() => handleEdit(comment)}
+                    color="warning"
+                    fill="clear"
+                    size="small"
+                  >
+                    <IonIcon icon={createOutline} />
+                  </IonButton>
+                  <IonButton
+                    onClick={() => handleDelete(comment._id)}
+                    color="danger"
+                    fill="clear"
+                    size="small"
+                  >
+                    <IonIcon icon={trashOutline} />
+                  </IonButton>
+                </div>
+              )}
             </div>
           )}
         </IonItem>
