@@ -13,15 +13,11 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-<<<<<<< HEAD
   IonAlert,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-=======
-  IonAlert
->>>>>>> origin/f-rosas
 } from '@ionic/react';
 import { create, trash, reorderFourOutline, } from 'ionicons/icons';
 import { FormTaskModal } from '../../components/Tasks/FormModalTask';
@@ -34,16 +30,12 @@ export const TaskPage = () => {
   const { getTasks, tasks } = useGetTask();
   const { deleteTask } = useDeleteTask();
   const [isDisabled, setIsDisabled] = useState(true);
-<<<<<<< HEAD
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Nuevo estado para el modal de detalles
-  const [selectedTask, setSelectedTask] = useState(null); // Nuevo estado para la tarea seleccionada
-=======
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); 
+  const [selectedTask, setSelectedTask] = useState(null); 
   const [isOpen, setIsOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
->>>>>>> origin/f-rosas
   const [showAlert, setShowAlert] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
@@ -61,10 +53,6 @@ export const TaskPage = () => {
   };
 
   const toggleTaskCompletion = (taskId) => {
-<<<<<<< HEAD
-    // Aquí puedes implementar la lógica para actualizar el estado de la tarea en el backend
-    // y luego volver a cargar las tareas. Por ahora, solo abrimos la cámara.
-    // Necesitas un hook de actualización para esto.
     const task = tasks.find(t => t._id === taskId);
     if (task && task.taskStatus !== 'Completed') {
       setSelectedTask(task);
@@ -75,10 +63,8 @@ export const TaskPage = () => {
   const handleTaskClick = (task) => {
     setSelectedTask(task);
     setIsDetailsModalOpen(true);
-=======
-    setSelectedTaskId(taskId);
+    setSelectedTaskId(selectedTaskId);
     setIsCameraOpen(true);
->>>>>>> origin/f-rosas
   };
 
   return (
@@ -144,19 +130,12 @@ export const TaskPage = () => {
             tasks.map((task) => (
               <IonItem
                 key={task._id}
-<<<<<<< HEAD
                 onClick={() => handleTaskClick(task)} // Agregado: para abrir el modal de detalles
                 style={{
                   background: 'var(--ion-color-white)',
                   transition: 'transform 0.2s ease',
                   opacity: task.taskStatus === 'Completed' ? '0.6' : '1',
                   cursor: 'pointer' // Para indicar que es clicable
-=======
-                style={{
-                  background: 'var(--ion-color-white)',
-                  transition: 'transform 0.2s ease',
-                  opacity: task.completed ? '0.6' : '1'
->>>>>>> origin/f-rosas
                 }}
                 className="hover:scale-[1.02]"
               >
@@ -164,21 +143,16 @@ export const TaskPage = () => {
                   <input
                     type="checkbox"
                     checked={task.taskStatus === 'Completed'}
-<<<<<<< HEAD
                     onChange={(e) => {
                       e.stopPropagation(); // Evita que el clic en el checkbox active el clic del item
                       toggleTaskCompletion(task._id);
                     }}
-=======
-                    onChange={() => toggleTaskCompletion(task._id)}
->>>>>>> origin/f-rosas
                     style={{
                       accentColor: 'var(--ion-color-primary)',
                       height: '20px',
                       width: '20px'
                     }}
                   />
-<<<<<<< HEAD
                   <div style={{ flexGrow: 1 }}>
                     <IonLabel
                       style={{
@@ -204,57 +178,15 @@ export const TaskPage = () => {
                       Vence: {task.dueDate} | Prioridad: {task.priority}
                     </p>
                   </div>
-=======
-                  <IonLabel
-                    style={{
-                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
-                      textDecoration: task.completed ? 'line-through' : 'none'
-                    }}
-                  >
-                    {task.taskName}
-                  </IonLabel>
-                  <IonLabel
-                    style={{
-                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
-                      textDecoration: task.completed ? 'line-through' : 'none'
-                    }}
-                  >
-                    {task.taskDescription}
-                  </IonLabel>
-                  <IonLabel
-                    style={{
-                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
-                      textDecoration: task.completed ? 'line-through' : 'none'
-                    }}
-                  >
-                    {task.dueDate}
-                  </IonLabel>
-                  <IonLabel
-                    style={{
-                      color: task.completed ? 'var(--ion-color-medium)' : 'var(--ion-color-dark)',
-                      textDecoration: task.completed ? 'line-through' : 'none'
-                    }}
-                  >
-                    {task.priority}
-                  </IonLabel>
->>>>>>> origin/f-rosas
                 </div>
 
                 <IonButtons slot="end" className="flex items-center gap-2">
                   <IonButton
-<<<<<<< HEAD
                     fill="clear"
                     style={{ color: 'red' }}
                     onClick={(e) => {
                       e.stopPropagation(); // Evita que el clic del botón abra el modal de detalles
                       setSelectedTask(task);
-=======
-                    id="delete-alert"
-                    fill="clear"
-                    style={{ color: 'red' }}
-                    onClick={() => {
-                      setSelectedTaskId(task._id);
->>>>>>> origin/f-rosas
                       setShowAlert(true);
                     }}
                   >
@@ -264,16 +196,10 @@ export const TaskPage = () => {
                   <IonButton
                     fill="clear"
                     style={{ color: 'var(--ion-color-primary)' }}
-<<<<<<< HEAD
                     onClick={(e) => {
                       e.stopPropagation();
                       setTaskToEdit(task);
                       setIsFormModalOpen(true);
-=======
-                    onClick={() => {
-                      setTaskToEdit(task);
-                      setIsOpen(true);
->>>>>>> origin/f-rosas
                     }}
                   >
                     Editar
@@ -307,11 +233,7 @@ export const TaskPage = () => {
             text: 'Confirmar',
             role: 'confirm',
             cssClass: 'alert-button-confirm',
-<<<<<<< HEAD
             handler: () => handleDeleteTask(selectedTask._id),
-=======
-            handler: () => handleDeleteTask(selectedTaskId),
->>>>>>> origin/f-rosas
           },
         ]}
         onDidDismiss={() => setShowAlert(false)}
@@ -319,23 +241,17 @@ export const TaskPage = () => {
 
       {/* Modales */}
       <FormTaskModal
-<<<<<<< HEAD
         isOpen={isFormModalOpen}
         onClose={() => {
           setIsFormModalOpen(false);
           setTaskToEdit(null); 
         }}
-=======
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
->>>>>>> origin/f-rosas
         onTaskCreated={handleTaskCreate}
         taskToEdit={taskToEdit}
       />
       <CameraModal
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
-<<<<<<< HEAD
         taskId={selectedTask?._id}
         onTaskCreated={handleTaskCreate}
       />
@@ -347,11 +263,3 @@ export const TaskPage = () => {
     </div>
   );
 };
-=======
-        taskId={selectedTaskId}
-        onTaskCreated={handleTaskCreate}
-      />
-    </div>
-  );
-};
->>>>>>> origin/f-rosas

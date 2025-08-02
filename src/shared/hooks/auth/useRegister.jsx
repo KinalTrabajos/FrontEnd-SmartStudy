@@ -25,7 +25,7 @@ export const useRegister = () => {
             return;
         }
 
-        navigate("/dashboard", { replace: true });
+        navigate("/login", { replace: true });
         window.location.reload();
     };
 

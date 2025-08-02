@@ -6,14 +6,8 @@ import {
 } from '@ionic/react';
 
 import {
-  search, personCircle, chevronUpCircle,
-<<<<<<< HEAD
-  colorPalette, document, globe, home, list, settings, calendar, folder, chatbubble, newspaper,
-  link
-=======
-  colorPalette, document, globe, home, list, settings,
-  calendar, folder, chatbubble, newspaper, helpCircle
->>>>>>> origin/f-rosas
+  search, personCircle,  home, list, settings, calendar, folder, chatbubble, newspaper,  helpCircle,
+  trophy
 } from 'ionicons/icons';
 
 import { Outlet } from 'react-router-dom';
@@ -34,16 +28,14 @@ export const MenuComponent = () => {
             {[
               { link: "/dashboard", icon: home, label: "Inicio" },
               { link: "/dashboard/tasks", icon: list, label: "Tareas" },
-              { link: "/dashboard/setting", icon: settings, label: "Ajuestes" },
               { link: "/dashboard/calendar", icon: calendar, label: "Calendario" },
               { link: "/dashboard/category", icon: folder, label: "Categorías" },
               { link: "/dashboard/publication", icon: newspaper, label: "Publicaciones" },
               { link: "/dashboard/comentario", icon: chatbubble, label: "Comentarios" },
-<<<<<<< HEAD
-              { link: "/dashboard/products", label: "Canejar Puntos"}
-=======
-              { link: "/dashboard/falshcard", icon: helpCircle, label: "Preguntas y respuestas" }, // <-- NUEVO ITEM
->>>>>>> origin/f-rosas
+              //{ link: "/dashboard/products", label: "Canejar Puntos"},
+              { link: "/dashboard/falshcard", icon: helpCircle, label: "Preguntas y respuestas" },
+              { link: "/dashboard/logros",icon: trophy, label: "Logros"},
+              { link: "/dashboard/setting", icon: settings, label: "Mi Perfil" },
             ].map((item, idx) => (
               <IonMenuToggle key={idx} autoHide={false}>
                 <IonItem

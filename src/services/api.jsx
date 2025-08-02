@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiStudy = axios.create({
-    baseURL: 'http://localhost:8080/TDAHSystem/v1',
+    baseURL: 'https://tdh-backen-production.up.railway.app/TDAHSystem/v1',
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
@@ -113,10 +113,6 @@ export const getEvents = async () => {
 export const createEvent = async (data) => {
     try {
         return await apiStudy.post('/event/', data)
-<<<<<<< HEAD
-    } catch (e) {
-        return {
-=======
     } catch (e) {
         return {
             error: true,
@@ -138,167 +134,7 @@ export const updateEvent = async (id, data) => {
 
 export const getInformationUser = async () => {
     try {
-        return await apiStudy.get(`/users/viewUserbyId`)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const updateUser = async (id, data) => {
-    try {
-        return await apiStudy.put(`/users/updateUser/${id}`, data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const updatePassword = async (id, data) => {
-    try {
-        return await apiStudy.put(`/users//updatePassword/${id}`, data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-
-export const addPublication = async (data) => {
-    try {
-        return await apiStudy.post('/publications/', data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const viewPublication = async () => {
-    try {
-        return await apiStudy.get('/publications/')
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const deletePublication = async (id) => {
-    try {
-        return await apiStudy.delete(`/publications/${id}`)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const updatePublication = async (id, data) => {
-    try {
-        return await apiStudy.put(`/publications/${id}`, data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const addComent = async (data) => {
-    try {
-        return await apiStudy.post('/comments', data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const viewCommentidpublication = async (id) => {
-    try {
-        return await apiStudy.get(`/comments/post/${id}`)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const deletComment = async (id) => {
-    try {
-        return await apiStudy.delete(`/comments/${id}`)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const updateComment = async (id, data) => {
-    try {
-        return await apiStudy.put(`/comments/${id}`, data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const deleteEvent = async (id) => {
-    try {
-        return await apiStudy.delete(`/event/${id}`);
-    } catch (e) {
-        return{
-            error: true,
-            e
-        }
-    }
-} 
-
-export const addCard = async(data) => {
-    try {
-        return await apiStudy.post('/flashcards/createFlashcard',data)
-    } catch (e) {
-        return{
->>>>>>> origin/f-rosas
-            error: true,
-            e
-        }
-    }
-}
-
-<<<<<<< HEAD
-export const updateEvent = async (id, data) => {
-    try {
-        return await apiStudy.put(`/event/${id}`, data)
-    } catch (e) {
-        return {
-            error: true,
-            e
-        }
-    }
-}
-
-export const getInformationUser = async () => {
-=======
-export const viewCard = async() => {
->>>>>>> origin/f-rosas
-    try {
-        return await apiStudy.get('/flashcards/viewFlashcard')
+        return await apiStudy.get('/users/viewUserbyId')
     } catch (e) {
         return{
             error: true,
@@ -520,3 +356,69 @@ export const deleteProduct = async(id) => {
         }
     }
 }
+
+export const addCard = async(data) => {
+    try {
+        return await apiStudy.post('/flashcards/createFlashcard',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const viewCard = async() => {
+    try {
+        return await apiStudy.get('/flashcards/viewFlashcard')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const viewRequestPendingCategory = async() => {
+    try {
+        return await apiStudy.get('/categorySubject/viewRequestSubject')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const assigname = async(id,data) => {
+    try {
+        return await apiStudy.post(`/categorySubject/assignMeSubject/${id}`, data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const viewSucces = async() => {
+    try {
+        return await apiStudy.get('/successes/viewSuccesses')
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+}
+
+export const addCategory = async(data) => {
+    try {
+        return await apiStudy.post('/categorySubject/requestCreateSubject',data)
+    } catch (e) {
+        return{
+            error: true,
+            e
+        }
+    }
+} 
