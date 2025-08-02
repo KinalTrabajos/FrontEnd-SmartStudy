@@ -14,10 +14,9 @@ export const useGetProducts = () => {
             const response = await getProductsRequest();
             console.log("Respuesta completa de la API (en hook):", response);
             
-            // Verificamos si la respuesta es exitosa y tiene la propiedad `products`
             if (!response.error && response.data && response.data.products) {
-                console.log("Productos recibidos y extraídos correctamente:", response.data.products);
-                setProducts(response.data.products); // <-- ¡Corrección clave aquí!
+                // Aquí se corrige el problema: Accedemos al array de productos
+                setProducts(response.data.products); 
             } else {
                 const errorMessage = response?.message || 'Error al obtener los productos o formato de datos inesperado.';
                 console.error("Error en el hook:", errorMessage);
@@ -31,7 +30,7 @@ export const useGetProducts = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [getProductsRequest]); // Agrega getProductsRequest a las dependencias por buena práctica si no es constante
+    }, [getProductsRequest]); 
 
     return {
         getProducts,

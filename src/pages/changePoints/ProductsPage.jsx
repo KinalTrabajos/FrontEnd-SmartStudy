@@ -23,7 +23,7 @@ import {
     IonTextarea,
     IonSpinner
 } from '@ionic/react';
-import { trashOutline, pencilOutline, createOutline } from 'ionicons/icons';
+import { trashOutline, pencilOutline, createOutline, closeOutline } from 'ionicons/icons';
 import { useGetProducts } from '../../shared/hooks/products/useGetProducts';
 import { useConfirmPurchase } from '../../shared/hooks/products/useConfirmPurchase';
 import { useCreateProduct } from '../../shared/hooks/products/useCreateProduct';
@@ -60,7 +60,7 @@ export const ProductsPage = () => {
     // Llama a getProducts una vez al cargar el componente
     useEffect(() => {
         getProducts();
-    }, [getProducts]); // Añadimos getProducts como dependencia para asegurar que se vuelva a llamar si la función cambia (aunque en este caso no lo hará).
+    }, [getProducts]); 
 
     const isAdmin = userLogged?.role === 'ADMIN_ROLE';
 
@@ -99,19 +99,19 @@ export const ProductsPage = () => {
 
     const handleAddProduct = async (newProduct) => {
         await createProduct(newProduct);
-        await getProducts(); // Recarga los productos después de crear uno nuevo
+        await getProducts(); 
         setIsAddProductModalOpen(false);
     };
 
     const handleUpdateProduct = async (updatedProduct) => {
         await updateProduct(updatedProduct._id, updatedProduct);
-        await getProducts(); // Recarga los productos después de actualizar uno
+        await getProducts(); 
         setIsUpdateProductModalOpen(false);
     };
 
     const handleDeleteProduct = async (productId) => {
         await deleteProduct(productId);
-        await getProducts(); // Recarga los productos después de eliminar uno
+        await getProducts(); 
     };
 
     const openUpdateModal = (product) => {
@@ -119,7 +119,6 @@ export const ProductsPage = () => {
         setIsUpdateProductModalOpen(true);
     };
 
-    // Renderizado condicional basado en los estados del hook
     if (productsLoading) {
         return (
             <IonContent className="ion-padding flex flex-col justify-center items-center h-full">
@@ -137,7 +136,6 @@ export const ProductsPage = () => {
         );
     }
 
-    // Si no hay productos y no hay errores ni carga, muestra un mensaje
     if (!products || products.length === 0) {
         return (
             <IonContent className="ion-padding flex justify-center items-center h-full">
@@ -146,7 +144,6 @@ export const ProductsPage = () => {
         );
     }
 
-    // Renderizado principal si los datos están disponibles
     return (
         <IonContent>
             <div className="p-4">
@@ -170,17 +167,27 @@ export const ProductsPage = () => {
                         {products.map((product) => (
                             <IonCol size="12" sizeMd="6" sizeLg="4" key={product._id}>
                                 <IonCard className="shadow-lg rounded-2xl overflow-hidden">
+                                    <div className="h-48 w-full bg-gray-200 flex items-center justify-center">
+                                        <img 
+                                            src={product.imageUrl || 'https://via.placeholder.com/250'} 
+                                            alt={product.nameProduct} 
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
                                     <IonCardHeader>
-                                        <IonCardTitle className="text-xl">{product.nameProduct}</IonCardTitle>
+                                        <IonCardTitle className="text-xl text-center font-semibold">{product.nameProduct}</IonCardTitle>
                                     </IonCardHeader>
                                     <IonCardContent>
-                                        <p className="text-lg font-bold mb-2">💰 {product.pricePoints.toFixed(2)} puntos</p>
-                                        <p className="text-sm mb-4 text-gray-600">{product.descriptionProduct}</p>
-                                        <div className="flex gap-2">
+                                        <p className="text-lg font-bold mb-2 text-center">
+                                            💰 {product.pricePoints.toFixed(2)} puntos
+                                        </p>
+                                        <p className="text-sm mb-4 text-gray-600 text-center">{product.descriptionProduct}</p>
+                                        <div className="flex gap-2 mt-4">
                                             <IonButton
                                                 expand="block"
                                                 onClick={() => addProductToCart(product._id, 1)}
                                                 disabled={cartLoading}
+                                                className="flex-1"
                                             >
                                                 Agregar al Carrito
                                             </IonButton>
@@ -226,8 +233,8 @@ export const ProductsPage = () => {
                             <>
                                 <IonList>
                                     {cart.keeperProduct.map((item) => (
-                                        <IonItem key={item.product?._id || item._id}>
-                                            <img src={item.product?.imageUrl || 'https://via.placeholder.com/150'} className="w-12 h-12 mr-4" alt={item.product?.nameProduct} />
+                                        <IonItem key={item.product?._id}>
+                                            <img src={item.product?.imageUrl || 'https://via.placeholder.com/50'} className="w-12 h-12 mr-4" alt={item.product?.nameProduct} />
                                             <IonLabel>
                                                 <h3>{item.product?.nameProduct}</h3>
                                                 <p>Cantidad: {item.amountProduct}</p>
@@ -260,7 +267,9 @@ export const ProductsPage = () => {
                         <IonToolbar>
                             <IonTitle>Agregar Nuevo Producto</IonTitle>
                             <IonButtons slot="end">
-                                <IonButton onClick={() => setIsAddProductModalOpen(false)}>Cerrar</IonButton>
+                                <IonButton onClick={() => setIsAddProductModalOpen(false)}>
+                                    <IonIcon icon={closeOutline} />
+                                </IonButton>
                             </IonButtons>
                         </IonToolbar>
                     </IonHeader>
@@ -270,9 +279,10 @@ export const ProductsPage = () => {
                                 e.preventDefault();
                                 const form = e.target;
                                 const newProduct = {
-                                    name: form.name.value,
-                                    price: parseFloat(form.price.value),
-                                    description: form.description.value,
+                                    nameProduct: form.name.value,
+                                    pricePoints: parseFloat(form.price.value),
+                                    descriptionProduct: form.description.value,
+                                    imageUrl: form.image.value || 'https://via.placeholder.com/250'
                                 };
                                 handleAddProduct(newProduct);
                                 form.reset();
@@ -291,6 +301,10 @@ export const ProductsPage = () => {
                                     <IonLabel position="floating">Descripción</IonLabel>
                                     <IonTextarea name="description"></IonTextarea>
                                 </IonItem>
+                                <IonItem>
+                                    <IonLabel position="floating">URL de la Imagen</IonLabel>
+                                    <IonInput name="image" type="url"></IonInput>
+                                </IonItem>
                             </IonList>
                             <IonButton type="submit" expand="block" className="mt-6">
                                 Guardar Producto
@@ -304,7 +318,9 @@ export const ProductsPage = () => {
                         <IonToolbar>
                             <IonTitle>Editar Producto</IonTitle>
                             <IonButtons slot="end">
-                                <IonButton onClick={() => setIsUpdateProductModalOpen(false)}>Cerrar</IonButton>
+                                <IonButton onClick={() => setIsUpdateProductModalOpen(false)}>
+                                    <IonIcon icon={closeOutline} />
+                                </IonButton>
                             </IonButtons>
                         </IonToolbar>
                     </IonHeader>
@@ -319,6 +335,7 @@ export const ProductsPage = () => {
                                         nameProduct: form.name.value,
                                         pricePoints: parseFloat(form.price.value),
                                         descriptionProduct: form.description.value,
+                                        imageUrl: form.image.value || productToUpdate.imageUrl,
                                     };
                                     handleUpdateProduct(updatedProduct);
                                 }}
@@ -335,6 +352,10 @@ export const ProductsPage = () => {
                                     <IonItem>
                                         <IonLabel position="floating">Descripción</IonLabel>
                                         <IonTextarea name="description" defaultValue={productToUpdate.descriptionProduct}></IonTextarea>
+                                    </IonItem>
+                                    <IonItem>
+                                        <IonLabel position="floating">URL de la Imagen</IonLabel>
+                                        <IonInput name="image" type="url" defaultValue={productToUpdate.imageUrl}></IonInput>
                                     </IonItem>
                                 </IonList>
                                 <IonButton type="submit" expand="block" className="mt-6">
